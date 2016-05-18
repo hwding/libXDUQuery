@@ -86,6 +86,6 @@ public class ECard {
     public static void main(String[] args) throws IOException {
         ECard eCard = new ECard();
         eCard.getCaptcha();
-        System.out.println( eCard.check_is_login(eCard.login()));
+        System.out.println(eCard.check_is_login(eCard.login()));
     }
 }
