@@ -35,7 +35,7 @@ public class ECard {
         urlConnection.connect();
         InputStream inputStream = urlConnection.getInputStream();
         byte[] bytes = new byte[1024];
-        FileOutputStream fileOutputStream = new FileOutputStream("CACHE.jpeg");
+        FileOutputStream fileOutputStream = new FileOutputStream("temp_captcha.jpeg");
         int LENGTH;
         while ((LENGTH = inputStream.read(bytes)) != -1){
             fileOutputStream.write(bytes, 0, LENGTH);
@@ -86,17 +86,17 @@ public class ECard {
     }
 
     /*
-    *此部分用于单独测试eCard模块
-    */
+     *此部分用于单独测试eCard模块
+     */
     public static void main(String[] args) throws IOException {
         ECard eCard = new ECard();
         eCard.getCaptcha();
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Captcha image generated, please input: ");
+        System.out.print("Captcha image generated, please input: ");
         String CAPTCHA = scanner.nextLine();
-        System.out.println("Student ID (also card number): ");
+        System.out.print("Student ID (also card number): ");
         String ID = scanner.nextLine();
-        System.out.println("Password for eCard (6 numbers): ");
+        System.out.print("Password for eCard (6 numbers): ");
         String PASSWORD = scanner.nextLine();
         System.out.println(eCard.check_is_login(eCard.login(CAPTCHA, ID, PASSWORD)));
     }
