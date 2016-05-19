@@ -139,7 +139,7 @@ public class ECard {
         String PASSWORD = scanner.nextLine();
         System.out.println(eCard.checkIsLogin(eCard.login(CAPTCHA, ID, PASSWORD)));
         /*
-         *建设/测试中
+         * 建设/测试中
          */
         eCard.queryTransferInfo("2016-04-20", "2016-05-20");
     }
