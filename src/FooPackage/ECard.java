@@ -100,13 +100,13 @@ public class ECard {
         httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
         //page=1&startTime=2016-04-20&endTime=2016-04-20&findType=1210
         String OUTPUT_DATA = "page=";
-        OUTPUT_DATA+=2;
+        OUTPUT_DATA+=4;
         OUTPUT_DATA+="&startTime=";
         OUTPUT_DATA+=fromDate;
         OUTPUT_DATA+="&endTime=";
         OUTPUT_DATA+=toDate;
         OUTPUT_DATA+="&findType=";
-        OUTPUT_DATA+="1210";
+        OUTPUT_DATA+="1210";        //magicNumber here
         httpURLConnection.connect();
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(httpURLConnection.getOutputStream(), "UTF-8");
         outputStreamWriter.write(OUTPUT_DATA);
