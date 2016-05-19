@@ -12,6 +12,7 @@ public class ECard {
     private final static String CARD_USER_INFO_SUFFIX = "/cardUserManager.do?method=searchCardUserInfo";
     private final static String LOGIN_SUFFIX = "/cardUserManager.do?method=checkLogin";
     private final static String CAPTCHA_SUFFIX = "/authImage";
+    private final static String TRANSFER_INFO_SUFFIX = "/cardUserManager.do?method=searchTrjnInfos";
     private String JSESSIONID;
 
     /*
@@ -44,10 +45,12 @@ public class ECard {
         fileOutputStream.close();
     }
 
+    /*
+     *登录方法须传入[当前验证码, 学号(卡号), 一卡通密码]三个参数
+     */
     private String login(String CAPTCHA, String ID, String PASSWORD) throws IOException {
         URL url = new URL(HOST + LOGIN_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-        httpURLConnection.setUseCaches(false);
         httpURLConnection.setRequestMethod("POST");
         httpURLConnection.setDoOutput(true);
         httpURLConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
@@ -69,9 +72,9 @@ public class ECard {
     }
 
     /*
-     *通过比对用户信息页面返回结果与登录时的学号判断是否登录成功
+     *通过比对用户信息页面返回结果与登录时的学号判断是否登录成功(非必须调用, 但建议进行验证), 传入参数为登录时的学号(卡号)
      */
-    private boolean check_is_login(String string) throws IOException {
+    private boolean checkIsLogin(String string) throws IOException {
         URL url = new URL(HOST + CARD_USER_INFO_SUFFIX);
         URLConnection urlConnection = url.openConnection();
         urlConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
@@ -83,6 +86,39 @@ public class ECard {
                 return true;
         }
         return false;
+    }
+
+    /*
+     *建设/测试中
+     */
+    private void queryTransferInfo(String fromDate, String toDate) throws IOException {
+        URL url = new URL(HOST + TRANSFER_INFO_SUFFIX);
+        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+        httpURLConnection.setRequestMethod("POST");
+        httpURLConnection.setDoOutput(true);
+        httpURLConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
+        httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        //page=1&startTime=2016-04-20&endTime=2016-04-20&findType=1210
+        String OUTPUT_DATA = "page=";
+        OUTPUT_DATA+=2;
+        OUTPUT_DATA+="&startTime=";
+        OUTPUT_DATA+=fromDate;
+        OUTPUT_DATA+="&endTime=";
+        OUTPUT_DATA+=toDate;
+        OUTPUT_DATA+="&findType=";
+        OUTPUT_DATA+="1210";
+        httpURLConnection.connect();
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(httpURLConnection.getOutputStream(), "UTF-8");
+        outputStreamWriter.write(OUTPUT_DATA);
+        outputStreamWriter.flush();
+        outputStreamWriter.close();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream(), "UTF-8"));
+        String temp;
+        while ((temp = bufferedReader.readLine()) != null){
+            System.out.println(temp);
+        }
+        httpURLConnection.getResponseMessage();
+        httpURLConnection.disconnect();
     }
 
     /*
@@ -98,6 +134,10 @@ public class ECard {
         String ID = scanner.nextLine();
         System.out.print("Password for eCard (6 numbers): ");
         String PASSWORD = scanner.nextLine();
-        System.out.println(eCard.check_is_login(eCard.login(CAPTCHA, ID, PASSWORD)));
+        System.out.println(eCard.checkIsLogin(eCard.login(CAPTCHA, ID, PASSWORD)));
+        /*
+         *建设/测试中
+         */
+        eCard.queryTransferInfo("2016-04-20", "2016-05-20");
     }
 }
