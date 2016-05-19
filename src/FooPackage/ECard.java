@@ -14,6 +14,9 @@ public class ECard {
     private final static String CAPTCHA_SUFFIX = "/authImage";
     private String JSESSIONID;
 
+    /*
+     *初始化时获得一个新的JSESSIONID并储存
+     */
     private ECard() throws IOException {
         URL url = new URL(HOST + PRE_LOGIN_SUFFIX);
         URLConnection urlConnection = url.openConnection();
@@ -22,6 +25,9 @@ public class ECard {
         JSESSIONID = JSESSIONID.substring(JSESSIONID.indexOf("=")+1, JSESSIONID.indexOf(";"));
     }
 
+    /*
+     *加载图片验证码到当前目录下, 登录(或重新登录)前必须调用此方法以刷新当前JSESSIONID的验证码
+     */
     private void getCaptcha() throws IOException {
         URL url = new URL(HOST + CAPTCHA_SUFFIX);
         URLConnection urlConnection = url.openConnection();
@@ -62,6 +68,9 @@ public class ECard {
         return ID;
     }
 
+    /*
+     *通过比对用户信息页面返回结果与登录时的学号判断是否登录成功
+     */
     private boolean check_is_login(String string) throws IOException {
         URL url = new URL(HOST + CARD_USER_INFO_SUFFIX);
         URLConnection urlConnection = url.openConnection();
