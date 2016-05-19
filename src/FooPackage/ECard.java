@@ -16,7 +16,8 @@ public class ECard {
     private String JSESSIONID;
 
     /*
-     *初始化时获得一个新的JSESSIONID并储存
+     * 初始化时从服务器获得一个新的JSESSIONID并储存
+     * 此JSESSIONID将作为整个SESSION(会话)的凭证
      */
     private ECard() throws IOException {
         URL url = new URL(HOST + PRE_LOGIN_SUFFIX);
@@ -27,7 +28,7 @@ public class ECard {
     }
 
     /*
-     *加载图片验证码到当前目录下, 登录(或重新登录)前必须调用此方法以刷新当前JSESSIONID的验证码
+     * 抓取并保存图片验证码于运行目录下, 登录(或重新登录)前必须调用此方法以刷新当前JSESSIONID的验证码
      */
     private void getCaptcha() throws IOException {
         URL url = new URL(HOST + CAPTCHA_SUFFIX);
@@ -46,7 +47,7 @@ public class ECard {
     }
 
     /*
-     *登录方法须传入[当前验证码, 学号(卡号), 一卡通密码]三个参数
+     * 登录方法须传入 <当前验证码, 学号(卡号), 一卡通密码>
      */
     private String login(String CAPTCHA, String ID, String PASSWORD) throws IOException {
         URL url = new URL(HOST + LOGIN_SUFFIX);
@@ -72,7 +73,9 @@ public class ECard {
     }
 
     /*
-     *通过比对用户信息页面返回结果与登录时的学号判断是否登录成功(非必须调用, 但建议进行验证), 传入参数为登录时的学号(卡号)
+     * 通过比对用户信息页面返回结果与登录时的学号判断是否登录成功(非必须调用, 但建议进行验证)
+     * 可用于检测当前SESSION(会话)是否已超时而需要重新登录
+     * 传入参数为登录时的学号(卡号)
      */
     private boolean checkIsLogin(String string) throws IOException {
         URL url = new URL(HOST + CARD_USER_INFO_SUFFIX);
@@ -89,7 +92,7 @@ public class ECard {
     }
 
     /*
-     *建设/测试中
+     * 建设/测试中
      */
     private void queryTransferInfo(String fromDate, String toDate) throws IOException {
         URL url = new URL(HOST + TRANSFER_INFO_SUFFIX);
@@ -122,7 +125,7 @@ public class ECard {
     }
 
     /*
-     *此部分用于单独测试eCard模块
+     * 此部分用于单独测试eCard模块
      */
     public static void main(String[] args) throws IOException {
         ECard eCard = new ECard();
