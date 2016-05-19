@@ -28,7 +28,7 @@ public class ECard {
     }
 
     /*
-     * 抓取并保存图片验证码于运行目录下, 登录(或重新登录)前必须调用此方法以刷新当前JSESSIONID的验证码
+     * 抓取并保存图片验证码于运行目录下, 登录(或重新登录)前必须调用此方法以刷新此次SESSION(会话)的验证码
      */
     private void getCaptcha() throws IOException {
         URL url = new URL(HOST + CAPTCHA_SUFFIX);
@@ -47,7 +47,7 @@ public class ECard {
     }
 
     /*
-     * 登录方法须传入 <当前验证码, 学号(卡号), 一卡通密码>
+     * 登录方法须传入 [ 当前验证码 | 学号(卡号) | 一卡通密码 ] 作为参数
      */
     private String login(String CAPTCHA, String ID, String PASSWORD) throws IOException {
         URL url = new URL(HOST + LOGIN_SUFFIX);
@@ -74,7 +74,7 @@ public class ECard {
 
     /*
      * 通过比对用户信息页面返回结果与登录时的学号判断是否登录成功(非必须调用, 但建议进行验证)
-     * 可用于检测当前SESSION(会话)是否已超时而需要重新登录
+     * 可用于检测当前SESSION(会话)是否因为已超时而需要重新登录
      * 传入参数为登录时的学号(卡号)
      */
     private boolean checkIsLogin(String string) throws IOException {
