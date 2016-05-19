@@ -38,14 +38,7 @@ public class ECard {
         fileOutputStream.close();
     }
 
-    private String login() throws IOException {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Captcha image generated, please input: ");
-        String CHAPTCHA = scanner.nextLine();
-        System.out.println("Student ID (also card number): ");
-        String ID = scanner.nextLine();
-        System.out.println("Password for eCard (6 numbers): ");
-        String PASSWORD = scanner.nextLine();
+    private String login(String CAPTCHA, String ID, String PASSWORD) throws IOException {
         URL url = new URL(HOST + LOGIN_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setUseCaches(false);
@@ -58,7 +51,7 @@ public class ECard {
         OUTPUT_DATA+="&pwd=";
         OUTPUT_DATA+=PASSWORD;
         OUTPUT_DATA+="&cardCheckCode=";
-        OUTPUT_DATA+=CHAPTCHA;
+        OUTPUT_DATA+=CAPTCHA;
         httpURLConnection.connect();
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(httpURLConnection.getOutputStream(), "UTF-8");
         outputStreamWriter.write(OUTPUT_DATA);
@@ -83,9 +76,19 @@ public class ECard {
         return false;
     }
 
+    /*
+    *此部分用于单独测试eCard模块
+    */
     public static void main(String[] args) throws IOException {
         ECard eCard = new ECard();
         eCard.getCaptcha();
-        System.out.println(eCard.check_is_login(eCard.login()));
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Captcha image generated, please input: ");
+        String CAPTCHA = scanner.nextLine();
+        System.out.println("Student ID (also card number): ");
+        String ID = scanner.nextLine();
+        System.out.println("Password for eCard (6 numbers): ");
+        String PASSWORD = scanner.nextLine();
+        System.out.println(eCard.check_is_login(eCard.login(CAPTCHA, ID, PASSWORD)));
     }
 }
