@@ -9,7 +9,9 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class ECard {
     private final static String HOST = "http://ecard.xidian.edu.cn";
@@ -89,6 +91,8 @@ public class ECard {
         urlConnection.connect();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
         String BUFFER;
+        if (string.length() != 11)
+            return false;
         while ((BUFFER = bufferedReader.readLine()) != null){
             if (BUFFER.contains(string.substring(0,7)))
                 return true;
@@ -99,11 +103,17 @@ public class ECard {
     /*
      * 建设/测试中
      */
-    private String queryTransferInfo(String fromDate, String toDate) throws IOException {
+    private ArrayList<String> queryTransferInfo(String fromDate, String toDate) throws IOException {
         int maxPage = 1;
+        boolean FLAG_GOT_MAX_PAGE = false;
+        final char SPACE = 160;
+        ArrayList<String> stringArrayList = new ArrayList<>();
         URL url = new URL(HOST + TRANSFER_INFO_SUFFIX);
         HttpURLConnection httpURLConnection = null;
-        boolean FLAG_GOT_MAX_PAGE = false;
+
+        /*
+         * 遍历所有结果页面
+         */
         for (int page=1; page<=maxPage; page++) {
             httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setRequestMethod("POST");
@@ -138,7 +148,7 @@ public class ECard {
             Document document = Jsoup.parse(htmlPage);
 
             /*
-             * 获取结果列表占用的页面数
+             * 获取查询结果占用的页面数
              */
             if (!FLAG_GOT_MAX_PAGE) {
                 Elements selectors = document.select("select");
@@ -152,15 +162,30 @@ public class ECard {
             }
 
             /*
-             * 解析当前结果页面列表的内容
+             * 解析当前页面的内容
              */
             Elements tables = document.select("table");
-            Elements trs = tables.select("tr");
-            for (Element each : trs)
-                System.out.println(each.text());
+            Elements trs = tables.select("[id=\"tabInfo\"]");
+            Elements tds = trs.select("td");
+            //System.out.println(each.text());
+            stringArrayList.addAll(tds.stream().filter(each -> !"".equals(each.text().replace(String.valueOf(SPACE),
+                    ""))).map(Element::text).collect(Collectors.toList()));
         }
         httpURLConnection.disconnect();
-        return null;
+        stringArrayList.set(stringArrayList.size()-1,
+                stringArrayList.get(stringArrayList.size()-1)
+                .substring(stringArrayList.get(stringArrayList.size()-1).indexOf("：")+1,
+                        stringArrayList.get(stringArrayList.size()-1).indexOf(" ")));
+        System.out.println(stringArrayList.get(stringArrayList.size()-1));
+
+        /*
+         * 返回字符串数组(stringArrayList)说明:
+         *      - 从数组第0项开始, 每五项是一条完整的流水记录
+         *      - 此五项依次代表 [ 交易地点 | 设备编号 | 交易时间 | 交易金额 | 余额 ]
+         *      - 数组的最后一项为查询区间内的总消费金额
+         *      - 因此, 数组长度为(5n+1), n即代表消费记录的总条数
+         */
+        return stringArrayList;
     }
 
     /*
@@ -180,6 +205,7 @@ public class ECard {
         /*
          * 建设/测试中
          */
-        eCard.queryTransferInfo("2016-04-20", "2016-05-20");
+        if (eCard.checkIsLogin(ID))
+            eCard.queryTransferInfo("2016-04-20", "2016-05-20");
     }
 }
