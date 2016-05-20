@@ -1,5 +1,10 @@
 package FooPackage;
 
+import org.jsoup.Jsoup;
+import org.jsoup.helper.StringUtil;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -94,39 +99,68 @@ public class ECard {
     /*
      * 建设/测试中
      */
-    private void queryTransferInfo(String fromDate, String toDate) throws IOException {
+    private String queryTransferInfo(String fromDate, String toDate) throws IOException {
+        int maxPage = 1;
         URL url = new URL(HOST + TRANSFER_INFO_SUFFIX);
-        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-        httpURLConnection.setRequestMethod("POST");
-        httpURLConnection.setDoOutput(true);
-        httpURLConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
-        httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        //page=1&startTime=2016-04-20&endTime=2016-04-20&findType=1210
-        String OUTPUT_DATA = "page=";
-        OUTPUT_DATA+=4;
-        OUTPUT_DATA+="&startTime=";
-        OUTPUT_DATA+=fromDate;
-        OUTPUT_DATA+="&endTime=";
-        OUTPUT_DATA+=toDate;
-        OUTPUT_DATA+="&findType=";
-        OUTPUT_DATA+="1210";
-                                    //1210 卡消费流水
-                                    //1130 卡充值流水
-                                    //1261 卡转账流水
-                                    //2230 卡补助流水
-                                    //1140 自动充值流水
-        httpURLConnection.connect();
-        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(httpURLConnection.getOutputStream(), "UTF-8");
-        outputStreamWriter.write(OUTPUT_DATA);
-        outputStreamWriter.flush();
-        outputStreamWriter.close();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream(), "UTF-8"));
-        String temp;
-        while ((temp = bufferedReader.readLine()) != null){
-            System.out.println(temp);
+        HttpURLConnection httpURLConnection = null;
+        boolean FLAG_GOT_MAX_PAGE = false;
+        for (int page=1; page<=maxPage; page++) {
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.setRequestMethod("POST");
+            httpURLConnection.setDoOutput(true);
+            httpURLConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
+            httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            //page=1&startTime=2016-04-20&endTime=2016-04-20&findType=1210
+            String OUTPUT_DATA = "page=";
+            OUTPUT_DATA += page;
+            OUTPUT_DATA += "&startTime=";
+            OUTPUT_DATA += fromDate;
+            OUTPUT_DATA += "&endTime=";
+            OUTPUT_DATA += toDate;
+            OUTPUT_DATA += "&findType=";
+            OUTPUT_DATA += "1210";
+            //1210 卡消费流水
+            //1130 卡充值流水
+            //1261 卡转账流水
+            //2230 卡补助流水
+            //1140 自动充值流水
+            httpURLConnection.connect();
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(httpURLConnection.getOutputStream(), "UTF-8");
+            outputStreamWriter.write(OUTPUT_DATA);
+            outputStreamWriter.flush();
+            outputStreamWriter.close();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream(), "UTF-8"));
+            String temp;
+            String htmlPage = "";
+            while ((temp = bufferedReader.readLine()) != null)
+                htmlPage+=temp;
+            httpURLConnection.getResponseMessage();
+            Document document = Jsoup.parse(htmlPage);
+
+            /*
+             * 获取结果列表占用的页面数
+             */
+            if (!FLAG_GOT_MAX_PAGE) {
+                Elements selectors = document.select("select");
+                Elements options = selectors.select("option");
+                for (Element each : options) {
+                    if (StringUtil.isNumeric(each.text())) {
+                        maxPage = Integer.valueOf(each.text());
+                        FLAG_GOT_MAX_PAGE = true;
+                    }
+                }
+            }
+
+            /*
+             * 解析当前结果页面列表的内容
+             */
+            Elements tables = document.select("table");
+            Elements trs = tables.select("tr");
+            for (Element each : trs)
+                System.out.println(each.text());
         }
-        httpURLConnection.getResponseMessage();
         httpURLConnection.disconnect();
+        return null;
     }
 
     /*
