@@ -109,7 +109,12 @@ public class ECard {
         OUTPUT_DATA+="&endTime=";
         OUTPUT_DATA+=toDate;
         OUTPUT_DATA+="&findType=";
-        OUTPUT_DATA+="1210";        //magicNumber here
+        OUTPUT_DATA+="1210";
+                                    //1210 卡消费流水
+                                    //1130 卡充值流水
+                                    //1261 卡转账流水
+                                    //2230 卡补助流水
+                                    //1140 自动充值流水
         httpURLConnection.connect();
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(httpURLConnection.getOutputStream(), "UTF-8");
         outputStreamWriter.write(OUTPUT_DATA);
