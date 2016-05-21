@@ -101,6 +101,7 @@ public class ECard {
 
     /*
      * 查询方法须传入 [ 开始日期 | 结束日期 ] 作为参数
+     * 日期格式: yyyy-MM-dd
      *
      * 注意: 起止日期区间不得超过一个月, 否则将返回垃圾结果(Rubbish in, Rubbish out)
      */
