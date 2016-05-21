@@ -1,9 +1,16 @@
 package FooPackage;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class SportsClock {
     private final static String HOST = "http://210.27.8.14";
@@ -49,6 +56,36 @@ public class SportsClock {
         return "OK".equals(httpURLConnection.getResponseMessage());
     }
 
+    ArrayList<String> queryAchievements() throws IOException {
+        URL url = new URL(HOST+ACHIEVEMENTS_SUFFIX);
+        URLConnection urlConnection = url.openConnection();
+        urlConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+        String temp;
+        String htmlPage = "";
+        while ((temp = bufferedReader.readLine()) != null)
+            htmlPage += temp;
+
+        /*
+         * 解析页面的内容
+         */
+        Document document = Jsoup.parse(htmlPage);
+        Elements elements = document.select("tr[class=\"\"]");
+        Elements tds = elements.select("td");
+
+        /*
+         * 返回字符串数组(stringArrayList)说明:
+         *      - 从数组第0项开始, 每五项是一条完整的打卡记录
+         *      - 此五项依次代表 [ 列表编号 | 打卡日期 | 打卡时段 | 里程 | 平均速度 ]
+         *      - 因此, 数组长度为(5n), n即代表打卡记录的总条数
+         *      - 打卡记录的顺序按打卡日期从早到晚排列
+         *
+         *      - 注意: 如果结果中没有记录将返回空数组而非null!
+         */
+        return tds.stream().filter(each -> !each.text().equals(""))
+                .map(Element::text).collect(Collectors.toCollection(ArrayList::new));
+    }
+
     /*
      * 此部分用于单独测试SportsClock模块
      */
@@ -56,5 +93,7 @@ public class SportsClock {
         SportsClock sportsClock = new SportsClock();
         sportsClock.login("15130188016", "15130188016");
         System.out.println(sportsClock.checkIsLogin());
+        if (sportsClock.checkIsLogin())
+            sportsClock.queryAchievements();
     }
 }

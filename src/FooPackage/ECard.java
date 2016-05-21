@@ -177,7 +177,7 @@ public class ECard {
         httpURLConnection.disconnect();
 
         /*
-         * 如果结果中没有记录将返回 null 而非空数组!
+         * 如果结果中没有记录将返回null而非空数组!
          */
         if (stringArrayList.size() == 0)
             return null;
@@ -193,8 +193,9 @@ public class ECard {
          *      - 此五项依次代表 [ 交易地点 | 设备编号 | 交易时间 | 交易金额 | 余额 ]
          *      - 数组的最后一项为查询区间内的总消费金额
          *      - 因此, 数组长度为(5n+1), n即代表消费记录的总条数
+         *      - 消费记录的顺序按消费时间从早到晚排列
          *
-         *      - 注意: 如果结果中没有记录将返回 null 而非空数组!
+         *      - 注意: 如果结果中没有记录将返回null而非空数组!
          */
         return stringArrayList;
     }
