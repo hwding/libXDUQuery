@@ -26,7 +26,7 @@ public class ECard {
      * 初始化时从服务器获得一个新的JSESSIONID并储存
      * 此JSESSIONID将作为整个SESSION(会话)的凭证
      */
-    private ECard() throws IOException {
+    ECard() throws IOException {
         URL url = new URL(HOST + PRE_LOGIN_SUFFIX);
         URLConnection urlConnection = url.openConnection();
         urlConnection.connect();
@@ -37,7 +37,7 @@ public class ECard {
     /*
      * 抓取并保存图片验证码于运行目录下, 登录(或重新登录)前必须调用此方法以刷新此次SESSION(会话)的验证码
      */
-    private void getCaptcha() throws IOException {
+    void getCaptcha() throws IOException {
         URL url = new URL(HOST + CAPTCHA_SUFFIX);
         URLConnection urlConnection = url.openConnection();
         urlConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
@@ -56,13 +56,12 @@ public class ECard {
     /*
      * 登录方法须传入 [ 当前验证码 | 学号(卡号) | 一卡通密码 ] 作为参数
      */
-    private String login(String CAPTCHA, String ID, String PASSWORD) throws IOException {
+    String login(String CAPTCHA, String ID, String PASSWORD) throws IOException {
         URL url = new URL(HOST + LOGIN_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setRequestMethod("POST");
         httpURLConnection.setDoOutput(true);
         httpURLConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
-        httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
         String OUTPUT_DATA = "flag=1&code=";
         OUTPUT_DATA+=ID;
         OUTPUT_DATA+="&pwd=";
@@ -84,7 +83,7 @@ public class ECard {
      * 可用于检测当前SESSION(会话)是否因为已超时而需要重新登录
      * 传入参数为登录时的学号(卡号)
      */
-    private boolean checkIsLogin(String string) throws IOException {
+    boolean checkIsLogin(String string) throws IOException {
         URL url = new URL(HOST + CARD_USER_INFO_SUFFIX);
         URLConnection urlConnection = url.openConnection();
         urlConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
@@ -101,11 +100,11 @@ public class ECard {
     }
 
     /*
-     * 查询方法须传入 [ 开始日期 | 结束日期 ]
+     * 查询方法须传入 [ 开始日期 | 结束日期 ] 作为参数
      *
      * 注意: 起止日期区间不得超过一个月, 否则将返回垃圾结果(Rubbish in, Rubbish out)
      */
-    private ArrayList<String> queryTransferInfo(String fromDate, String toDate) throws IOException {
+    ArrayList<String> queryTransferInfo(String fromDate, String toDate) throws IOException {
         int maxPage = 1;
         boolean FLAG_GOT_MAX_PAGE = false;
         final char SPACE = 160;
@@ -121,7 +120,6 @@ public class ECard {
             httpURLConnection.setRequestMethod("POST");
             httpURLConnection.setDoOutput(true);
             httpURLConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
-            httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             String OUTPUT_DATA = "page=";
             OUTPUT_DATA += page;
             OUTPUT_DATA += "&startTime=";
