@@ -173,11 +173,16 @@ public class ECard {
             Elements tables = document.select("table");
             Elements trs = tables.select("[id=\"tabInfo\"]");
             Elements tds = trs.select("td");
-            //System.out.println(each.text());
             stringArrayList.addAll(tds.stream().filter(each -> !"".equals(each.text().replace(String.valueOf(SPACE),
                     ""))).map(Element::text).collect(Collectors.toList()));
         }
         httpURLConnection.disconnect();
+
+        /*
+         * 如果结果中没有记录将返回 null 而非空数组!
+         */
+        if (stringArrayList.size() == 0)
+            return null;
         stringArrayList.set(stringArrayList.size()-1,
                 stringArrayList.get(stringArrayList.size()-1)
                 .substring(stringArrayList.get(stringArrayList.size()-1).indexOf("：")+1,
@@ -190,6 +195,8 @@ public class ECard {
          *      - 此五项依次代表 [ 交易地点 | 设备编号 | 交易时间 | 交易金额 | 余额 ]
          *      - 数组的最后一项为查询区间内的总消费金额
          *      - 因此, 数组长度为(5n+1), n即代表消费记录的总条数
+         *
+         *      - 注意: 如果结果中没有记录将返回 null 而非空数组!
          */
         return stringArrayList;
     }
@@ -209,6 +216,6 @@ public class ECard {
         String PASSWORD = scanner.nextLine();
         System.out.println(eCard.checkIsLogin(eCard.login(CAPTCHA, ID, PASSWORD)));
         if (eCard.checkIsLogin(ID))
-            eCard.queryTransferInfo("2016-04-20", "2016-05-20");
+            eCard.queryTransferInfo("2016-05-21", "2016-05-21");
     }
 }
