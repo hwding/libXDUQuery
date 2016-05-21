@@ -101,7 +101,9 @@ public class ECard {
     }
 
     /*
-     * 建设/测试中
+     * 查询方法须传入 [ 开始日期 | 结束日期 ]
+     *
+     * 注意: 起止日期区间不得超过一个月, 否则将返回垃圾结果(Rubbish in, Rubbish out)
      */
     private ArrayList<String> queryTransferInfo(String fromDate, String toDate) throws IOException {
         int maxPage = 1;
@@ -120,7 +122,6 @@ public class ECard {
             httpURLConnection.setDoOutput(true);
             httpURLConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
             httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            //page=1&startTime=2016-04-20&endTime=2016-04-20&findType=1210
             String OUTPUT_DATA = "page=";
             OUTPUT_DATA += page;
             OUTPUT_DATA += "&startTime=";
@@ -128,12 +129,17 @@ public class ECard {
             OUTPUT_DATA += "&endTime=";
             OUTPUT_DATA += toDate;
             OUTPUT_DATA += "&findType=";
+            /*
+             * 请求类型(findType)说明:
+             *      - 1210 卡消费流水
+             *      - 1130 卡充值流水
+             *      - 1261 卡转账流水
+             *      - 2230 卡补助流水
+             *      - 1140 自动充值流水
+             *
+             *      - 经测试只有卡消费流水类型可用, 因此锁定此查询类型
+            */
             OUTPUT_DATA += "1210";
-            //1210 卡消费流水
-            //1130 卡充值流水
-            //1261 卡转账流水
-            //2230 卡补助流水
-            //1140 自动充值流水
             httpURLConnection.connect();
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(httpURLConnection.getOutputStream(), "UTF-8");
             outputStreamWriter.write(OUTPUT_DATA);
@@ -202,9 +208,6 @@ public class ECard {
         System.out.print("Password for eCard (6 numbers): ");
         String PASSWORD = scanner.nextLine();
         System.out.println(eCard.checkIsLogin(eCard.login(CAPTCHA, ID, PASSWORD)));
-        /*
-         * 建设/测试中
-         */
         if (eCard.checkIsLogin(ID))
             eCard.queryTransferInfo("2016-04-20", "2016-05-20");
     }
