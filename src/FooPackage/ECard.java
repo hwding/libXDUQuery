@@ -21,6 +21,7 @@ public class ECard {
     private final static String CAPTCHA_SUFFIX = "/authImage";
     private final static String TRANSFER_INFO_SUFFIX = "/cardUserManager.do?method=searchTrjnInfos";
     private String JSESSIONID;
+    private String ID = "";
 
     /*
      * 初始化时从服务器获得一个新的JSESSIONID并储存
@@ -55,6 +56,7 @@ public class ECard {
 
     /*
      * 登录方法须传入 [ 当前验证码 | 学号(卡号) | 一卡通密码 ] 作为参数
+     * 返回输入的用户名用以直接传参数给checkIsLogin()方法
      */
     String login(String CAPTCHA, String ID, String PASSWORD) throws IOException {
         URL url = new URL(HOST + LOGIN_SUFFIX);
@@ -83,18 +85,20 @@ public class ECard {
      * 可用于检测当前SESSION(会话)是否因为已超时而需要重新登录
      * 传入参数为登录时的学号(卡号)
      */
-    boolean checkIsLogin(String string) throws IOException {
+    boolean checkIsLogin(String username) throws IOException {
         URL url = new URL(HOST + CARD_USER_INFO_SUFFIX);
         URLConnection urlConnection = url.openConnection();
         urlConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
         urlConnection.connect();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
         String BUFFER;
-        if (string.length() != 11)
+        if (username.length() != 11)
             return false;
         while ((BUFFER = bufferedReader.readLine()) != null){
-            if (BUFFER.contains(string.substring(0,7)))
+            if (BUFFER.contains(username.substring(0,7))) {
+                ID = username;
                 return true;
+            }
         }
         return false;
     }
@@ -186,7 +190,6 @@ public class ECard {
                 stringArrayList.get(stringArrayList.size()-1)
                 .substring(stringArrayList.get(stringArrayList.size()-1).indexOf("：")+1,
                         stringArrayList.get(stringArrayList.size()-1).indexOf(" ")));
-        System.out.println(stringArrayList.get(stringArrayList.size()-1));
 
         /*
          * 返回字符串数组(stringArrayList)说明:
@@ -199,6 +202,15 @@ public class ECard {
          *      - 注意: 如果结果中没有记录将返回null而非空数组!
          */
         return stringArrayList;
+    }
+
+    /*
+     * 用于返回当前会话的卡号(学号)
+     *
+     * 注意: 当且仅当checkIsLogin()方法被调用且确认已登录成功(checkIsLogin()返回true)时, 其返回为当前会话的卡号(学号), 否则返回空内容
+     */
+    String getID(){
+        return ID;
     }
 
     /*
@@ -215,7 +227,9 @@ public class ECard {
         System.out.print("Password for eCard (6 numbers): ");
         String PASSWORD = scanner.nextLine();
         System.out.println(eCard.checkIsLogin(eCard.login(CAPTCHA, ID, PASSWORD)));
-        if (eCard.checkIsLogin(ID))
-            eCard.queryTransferInfo("2016-05-21", "2016-05-21");
+        if (eCard.checkIsLogin(ID)) {
+            eCard.queryTransferInfo("2016-04-21", "2016-05-21");
+            System.out.println(eCard.getID());
+        }
     }
 }
