@@ -102,6 +102,7 @@ public class SportsClock {
     }
 
     /*
+     * Demo
      * 此部分用于单独测试SportsClock模块
      */
     public static void main(String[] args) throws IOException {
