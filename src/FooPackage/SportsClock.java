@@ -95,7 +95,7 @@ public class SportsClock {
     /*
      * 用于返回当前会话的学号
      *
-     * 注意: 当且仅当checkIsLogin()方法被调用且确认已登录成功(checkIsLogin()返回true)时, 其返回为当前会话的卡号(学号), 否则返回空内容
+     * 注意: 当且仅当checkIsLogin()方法被调用且确认已登录成功(checkIsLogin()返回true)时, 其返回为当前会话的学号, 否则返回空内容
      */
     String getID(){
         return ID;
