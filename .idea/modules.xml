@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/LibXDUQuery.iml" filepath="$PROJECT_DIR$/LibXDUQuery.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libXDUQuery.iml" filepath="$PROJECT_DIR$/libXDUQuery.iml" />
     </modules>
   </component>
 </project>
