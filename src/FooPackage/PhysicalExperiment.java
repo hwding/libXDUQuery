@@ -90,12 +90,21 @@ public class PhysicalExperiment {
         Document document = Jsoup.parse(htmlPage);
         Elements elements = document.select("td[class=\"forumRow\"]");
         stringArrayList.addAll(elements.stream().map(Element::text).collect(Collectors.toList()));
+
+        /*
+         * 返回字符串数组(stringArrayList)说明:
+         *      - 从数组第0项开始, 每十项是一条完整的已选实验信息
+         *      - 此十项依次代表 [ 序号 | 实验项目 | 实验周次 | 实验时间 | 实验日期 | 上课教室 | 讲义出处 | 实验成绩 | 归一成绩 | 备注 ]
+         *      - 因此, 数组长度为(10n), n即代表已选实验的总数
+         *
+         *      - 注意: 如果结果中没有记录将返回空数组而非null!
+         */
         return stringArrayList;
     }
 
     public static void main(String[] args) throws IOException {
         PhysicalExperiment physicalExperiment = new PhysicalExperiment();
-        physicalExperiment.login("15130188016", "");
+        physicalExperiment.login("此处传入用户名", "此处传入密码");
         physicalExperiment.queryAchievements();
     }
 }

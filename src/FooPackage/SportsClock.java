@@ -107,8 +107,7 @@ public class SportsClock {
      */
     public static void main(String[] args) throws IOException {
         SportsClock sportsClock = new SportsClock();
-        System.out.println(sportsClock.checkIsLogin(sportsClock.login("15130188016", "15130188016")));
-        if (sportsClock.checkIsLogin(sportsClock.login("15130188016", "15130188016"))) {
+        if (sportsClock.checkIsLogin(sportsClock.login("此处传入用户名", "此处传入密码"))) {
             sportsClock.queryAchievements();
             System.out.println(sportsClock.getID());
         }
