@@ -127,7 +127,7 @@ public class PhysicalExperiment {
      */
     public static void main(String[] args) throws IOException {
         PhysicalExperiment physicalExperiment = new PhysicalExperiment();
-        if(physicalExperiment.login("此处传入用户名", "此处传入密码"))
+        if(physicalExperiment.login("用户名", "密码"))
             physicalExperiment.queryAchievements();
     }
 }
