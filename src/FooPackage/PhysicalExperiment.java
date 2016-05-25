@@ -17,6 +17,7 @@ public class PhysicalExperiment {
     private final static String SELECTED_EXPERIMENT_SUFFIX = "/student/select.aspx";
     private final static String LOGIN_SUFFIX = "/default.aspx";
     private String PhyEwsAuth;
+    private String ID = "";
 
     private static String preLogin() throws IOException {
         URL url = new URL(HOST+LOGIN_SUFFIX);
@@ -47,7 +48,11 @@ public class PhysicalExperiment {
         return stringArrayList;
     }
 
-    void login(String username, String password) throws IOException {
+    /*
+     * 登录方法须传入 [ 学号 | 密码 ] 作为参数
+     * 返回是否登录成功
+     */
+    boolean login(String username, String password) throws IOException {
         ArrayList<String> pageAttributes = getPageAttributes(preLogin());
         URL url = new URL(HOST+LOGIN_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -73,7 +78,12 @@ public class PhysicalExperiment {
         outputStreamWriter.close();
         httpURLConnection.getResponseMessage();
         PhyEwsAuth = httpURLConnection.getHeaderField("Set-Cookie");
-        PhyEwsAuth = PhyEwsAuth.substring(PhyEwsAuth.indexOf("=")+1, PhyEwsAuth.indexOf(";"));
+        if (PhyEwsAuth != null) {
+            PhyEwsAuth = PhyEwsAuth.substring(PhyEwsAuth.indexOf("=") + 1, PhyEwsAuth.indexOf(";"));
+            ID = username;
+            return true;
+        }
+        return false;
     }
 
     ArrayList<String> queryAchievements() throws IOException {
@@ -102,9 +112,22 @@ public class PhysicalExperiment {
         return stringArrayList;
     }
 
+    /*
+     * 用于返回当前会话的学号
+     *
+     * 注意: 当且仅当登录成功时, 其返回为当前会话的学号, 否则返回空内容
+     */
+    String getID(){
+        return ID;
+    }
+
+    /*
+     * Demo
+     * 此部分用于单独测试PhysicalExperiment模块
+     */
     public static void main(String[] args) throws IOException {
         PhysicalExperiment physicalExperiment = new PhysicalExperiment();
-        physicalExperiment.login("此处传入用户名", "此处传入密码");
-        physicalExperiment.queryAchievements();
+        if(physicalExperiment.login("此处传入用户名", "此处传入密码"))
+            physicalExperiment.queryAchievements();
     }
 }
