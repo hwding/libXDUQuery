@@ -51,7 +51,7 @@ public class PhysicalExperiment {
      * 登录方法须传入 [ 学号 | 密码 ] 作为参数
      * 返回是否登录成功
      */
-    boolean login(String username, String password) throws IOException {
+    public boolean login(String username, String password) throws IOException {
         ArrayList<String> pageAttributes = getPageAttributes(preLogin());
         URL url = new URL(HOST+LOGIN_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -85,7 +85,7 @@ public class PhysicalExperiment {
         return false;
     }
 
-    ArrayList<String> queryAchievements() throws IOException {
+    public ArrayList<String> queryAchievements() throws IOException {
         ArrayList<String> stringArrayList = new ArrayList<>();
         URL url = new URL(HOST+SELECTED_EXPERIMENT_SUFFIX);
         URLConnection urlConnection = url.openConnection();

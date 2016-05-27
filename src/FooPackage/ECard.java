@@ -26,7 +26,7 @@ public class ECard {
      * 初始化时从服务器获得一个新的JSESSIONID并储存
      * 此JSESSIONID将作为整个SESSION(会话)的凭证
      */
-    ECard() throws IOException {
+    public ECard() throws IOException {
         URL url = new URL(HOST + PRE_LOGIN_SUFFIX);
         URLConnection urlConnection = url.openConnection();
         urlConnection.connect();
@@ -37,7 +37,7 @@ public class ECard {
     /*
      * 抓取并保存图片验证码于运行目录下, 登录(或重新登录)前必须调用此方法以刷新此次SESSION(会话)的验证码
      */
-    void getCaptcha() throws IOException {
+    public void getCaptcha() throws IOException {
         URL url = new URL(HOST + CAPTCHA_SUFFIX);
         URLConnection urlConnection = url.openConnection();
         urlConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
@@ -57,7 +57,7 @@ public class ECard {
      * 登录方法须传入 [ 当前验证码 | 学号(卡号) | 一卡通密码 ] 作为参数
      * 返回输入的用户名用以直接传参数给checkIsLogin()方法
      */
-    String login(String CAPTCHA, String ID, String PASSWORD) throws IOException {
+    public String login(String CAPTCHA, String ID, String PASSWORD) throws IOException {
         URL url = new URL(HOST + LOGIN_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setRequestMethod("POST");
@@ -84,7 +84,7 @@ public class ECard {
      * 可用于检测当前SESSION(会话)是否因为已超时而需要重新登录
      * 传入参数为登录时的学号(卡号)
      */
-    boolean checkIsLogin(String username) throws IOException {
+    public boolean checkIsLogin(String username) throws IOException {
         URL url = new URL(HOST + CARD_USER_INFO_SUFFIX);
         URLConnection urlConnection = url.openConnection();
         urlConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
@@ -108,7 +108,7 @@ public class ECard {
      *
      * 注意: 起止日期区间不得超过一个月, 否则将返回垃圾结果(Rubbish in, Rubbish out)
      */
-    ArrayList<String> queryTransferInfo(String fromDate, String toDate) throws IOException {
+    public ArrayList<String> queryTransferInfo(String fromDate, String toDate) throws IOException {
         int maxPage = 1;
         boolean FLAG_GOT_MAX_PAGE = false;
         final char SPACE = 160;
@@ -212,7 +212,7 @@ public class ECard {
      *
      * 注意: 当且仅当checkIsLogin()方法被调用且确认已登录成功(checkIsLogin()返回true)时, 其返回为当前会话的卡号(学号), 否则返回空内容
      */
-    String getID(){
+    public String getID(){
         return ID;
     }
 
