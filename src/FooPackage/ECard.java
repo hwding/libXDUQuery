@@ -35,16 +35,18 @@ public class ECard {
     }
 
     /**
-     * 抓取并保存图片验证码于运行目录下, 登录(或重新登录)前必须调用此方法以刷新此次SESSION(会话)的验证码
+     * 加载验证码须传入 [ 目标文件 ] 作为参数
+     * 验证码将会写入目标文件, 文件须为JPEG格式
+     * 登录(或重新登录)前必须调用此方法以刷新此次SESSION(会话)的验证码
      */
-    public void getCaptcha() throws IOException {
+    public void getCaptcha(File file) throws IOException {
         URL url = new URL(HOST + CAPTCHA_SUFFIX);
         URLConnection urlConnection = url.openConnection();
         urlConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
         urlConnection.connect();
         InputStream inputStream = urlConnection.getInputStream();
         byte[] bytes = new byte[1024];
-        FileOutputStream fileOutputStream = new FileOutputStream("temp_captcha.jpeg");
+        FileOutputStream fileOutputStream = new FileOutputStream(file);
         int LENGTH;
         while ((LENGTH = inputStream.read(bytes)) != -1){
             fileOutputStream.write(bytes, 0, LENGTH);
@@ -223,7 +225,7 @@ public class ECard {
      */
     public static void main(String[] args) throws IOException {
         ECard eCard = new ECard();
-        eCard.getCaptcha();
+        eCard.getCaptcha(new File("temp_captcha.jpeg"));
         Scanner scanner = new Scanner(System.in);
         System.out.print("Captcha image generated, please input: ");
         String CAPTCHA = scanner.nextLine();
