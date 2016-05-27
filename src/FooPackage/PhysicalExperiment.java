@@ -10,7 +10,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class PhysicalExperiment {
     private final static String HOST = "http://wlsy.xidian.edu.cn/phyEws";
@@ -99,7 +98,7 @@ public class PhysicalExperiment {
             htmlPage += temp;
         Document document = Jsoup.parse(htmlPage);
         Elements elements = document.select("td[class=\"forumRow\"]");
-        stringArrayList.addAll(elements.stream().map(Element::text).collect(Collectors.toList()));
+        for (Element element : elements) stringArrayList.add(element.text());
 
         /*
          * 返回字符串数组(stringArrayList)说明:

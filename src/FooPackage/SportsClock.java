@@ -9,7 +9,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class SportsClock {
     private final static String HOST = "http://210.27.8.14";
@@ -23,7 +22,7 @@ public class SportsClock {
      * 登录方法须传入 [ 学号 | 密码 ] 作为参数
      * 返回输入的用户名用以直接传参数给checkIsLogin()方法
      */
-    String login (String username, String password) throws IOException {
+    public String login (String username, String password) throws IOException {
         URL url = new URL(HOST+LOGIN_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setDoOutput(true);
@@ -49,7 +48,7 @@ public class SportsClock {
     /*
      * 通过直接请求内部页面并检查返回值判断是否登录成功(非必须调用, 但建议进行验证)
      */
-    boolean checkIsLogin(String username) throws IOException {
+    public boolean checkIsLogin(String username) throws IOException {
         URL url = new URL(HOST+RUNNER_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setInstanceFollowRedirects(false);
@@ -62,7 +61,7 @@ public class SportsClock {
         return false;
     }
 
-    ArrayList<String> queryAchievements() throws IOException {
+    public ArrayList<String> queryAchievements() throws IOException {
         URL url = new URL(HOST+ACHIEVEMENTS_SUFFIX);
         URLConnection urlConnection = url.openConnection();
         urlConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
@@ -88,8 +87,13 @@ public class SportsClock {
          *
          *      - 注意: 如果结果中没有记录将返回空数组而非null!
          */
-        return tds.stream().filter(each -> !each.text().equals(""))
-                .map(Element::text).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<String> stringArrayList = new ArrayList<>();
+
+        for (Element td : tds) {
+            if (!"".equals(td.text()))
+                stringArrayList.add(td.text());
+        }
+        return stringArrayList;
     }
 
     /*
@@ -97,7 +101,7 @@ public class SportsClock {
      *
      * 注意: 当且仅当checkIsLogin()方法被调用且确认已登录成功(checkIsLogin()返回true)时, 其返回为当前会话的学号, 否则返回空内容
      */
-    String getID(){
+    public String getID(){
         return ID;
     }
 

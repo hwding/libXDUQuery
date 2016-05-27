@@ -11,7 +11,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class ECard {
     private final static String HOST = "http://ecard.xidian.edu.cn";
@@ -176,9 +175,13 @@ public class ECard {
             Elements tables = document.select("table");
             Elements trs = tables.select("[id=\"tabInfo\"]");
             Elements tds = trs.select("td");
-            stringArrayList.addAll(tds.stream().filter(each -> !"".equals(each.text().replace(String.valueOf(SPACE),
-                    ""))).map(Element::text).collect(Collectors.toList()));
+
+            for (Element td : tds) {
+                if (!"".equals(td.text().replace(String.valueOf(SPACE), "")))
+                    stringArrayList.add(td.text());
+            }
         }
+
         httpURLConnection.disconnect();
 
         /*
