@@ -18,7 +18,7 @@ public class SportsClock {
     private String JSESSIONID;
     private String ID = "";
 
-    /*
+    /**
      * 登录方法须传入 [ 学号 | 密码 ] 作为参数
      * 返回输入的用户名用以直接传参数给checkIsLogin()方法
      */
@@ -45,7 +45,7 @@ public class SportsClock {
         return username;
     }
 
-    /*
+    /**
      * 通过直接请求内部页面并检查返回值判断是否登录成功(非必须调用, 但建议进行验证)
      */
     public boolean checkIsLogin(String username) throws IOException {
@@ -96,7 +96,7 @@ public class SportsClock {
         return stringArrayList;
     }
 
-    /*
+    /**
      * 用于返回当前会话的学号
      *
      * 注意: 当且仅当checkIsLogin()方法被调用且确认已登录成功(checkIsLogin()返回true)时, 其返回为当前会话的学号, 否则返回空内容
@@ -105,7 +105,7 @@ public class SportsClock {
         return ID;
     }
 
-    /*
+    /**
      * Demo
      * 此部分用于单独测试SportsClock模块
      */

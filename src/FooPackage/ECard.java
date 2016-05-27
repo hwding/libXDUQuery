@@ -22,7 +22,7 @@ public class ECard {
     private String JSESSIONID;
     private String ID = "";
 
-    /*
+    /**
      * 初始化时从服务器获得一个新的JSESSIONID并储存
      * 此JSESSIONID将作为整个SESSION(会话)的凭证
      */
@@ -34,7 +34,7 @@ public class ECard {
         JSESSIONID = JSESSIONID.substring(JSESSIONID.indexOf("=")+1, JSESSIONID.indexOf(";"));
     }
 
-    /*
+    /**
      * 抓取并保存图片验证码于运行目录下, 登录(或重新登录)前必须调用此方法以刷新此次SESSION(会话)的验证码
      */
     public void getCaptcha() throws IOException {
@@ -53,7 +53,7 @@ public class ECard {
         fileOutputStream.close();
     }
 
-    /*
+    /**
      * 登录方法须传入 [ 当前验证码 | 学号(卡号) | 一卡通密码 ] 作为参数
      * 返回输入的用户名用以直接传参数给checkIsLogin()方法
      */
@@ -79,7 +79,7 @@ public class ECard {
         return ID;
     }
 
-    /*
+    /**
      * 通过比对用户信息页面返回结果与登录时的学号判断是否登录成功(非必须调用, 但建议进行验证)
      * 可用于检测当前SESSION(会话)是否因为已超时而需要重新登录
      * 传入参数为登录时的学号(卡号)
@@ -102,7 +102,7 @@ public class ECard {
         return false;
     }
 
-    /*
+    /**
      * 查询方法须传入 [ 开始日期 | 结束日期 ] 作为参数
      * 日期格式: yyyy-MM-dd
      *
@@ -116,7 +116,7 @@ public class ECard {
         URL url = new URL(HOST + TRANSFER_INFO_SUFFIX);
         HttpURLConnection httpURLConnection = null;
 
-        /*
+        /**
          * 遍历所有结果页面
          */
         for (int page=1; page<=maxPage; page++) {
@@ -131,7 +131,8 @@ public class ECard {
             OUTPUT_DATA += "&endTime=";
             OUTPUT_DATA += toDate;
             OUTPUT_DATA += "&findType=";
-            /*
+
+            /**
              * 请求类型(findType)说明:
              *      - 1210 卡消费流水
              *      - 1130 卡充值流水
@@ -155,7 +156,7 @@ public class ECard {
             httpURLConnection.getResponseMessage();
             Document document = Jsoup.parse(htmlPage);
 
-            /*
+            /**
              * 获取查询结果占用的页面数
              */
             if (!FLAG_GOT_MAX_PAGE) {
@@ -169,7 +170,7 @@ public class ECard {
                 }
             }
 
-            /*
+            /**
              * 解析当前页面的内容
              */
             Elements tables = document.select("table");
@@ -184,7 +185,7 @@ public class ECard {
 
         httpURLConnection.disconnect();
 
-        /*
+        /**
          * 如果结果中没有记录将返回null而非空数组!
          */
         if (stringArrayList.size() == 0)
@@ -194,7 +195,7 @@ public class ECard {
                 .substring(stringArrayList.get(stringArrayList.size()-1).indexOf("：")+1,
                         stringArrayList.get(stringArrayList.size()-1).indexOf(" ")));
 
-        /*
+        /**
          * 返回字符串数组(stringArrayList)说明:
          *      - 从数组第0项开始, 每五项是一条完整的流水记录
          *      - 此五项依次代表 [ 交易地点 | 设备编号 | 交易时间 | 交易金额 | 余额 ]
@@ -207,7 +208,7 @@ public class ECard {
         return stringArrayList;
     }
 
-    /*
+    /**
      * 用于返回当前会话的卡号(学号)
      *
      * 注意: 当且仅当checkIsLogin()方法被调用且确认已登录成功(checkIsLogin()返回true)时, 其返回为当前会话的卡号(学号), 否则返回空内容
@@ -216,7 +217,7 @@ public class ECard {
         return ID;
     }
 
-    /*
+    /**
      * Demo
      * 此部分用于单独测试eCard模块
      */
