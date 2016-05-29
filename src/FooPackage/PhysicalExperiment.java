@@ -80,8 +80,10 @@ public class PhysicalExperiment {
         if (PhyEwsAuth != null) {
             PhyEwsAuth = PhyEwsAuth.substring(PhyEwsAuth.indexOf("=") + 1, PhyEwsAuth.indexOf(";"));
             ID = username;
+            httpURLConnection.disconnect();
             return true;
         }
+        httpURLConnection.disconnect();
         return false;
     }
 
@@ -96,6 +98,7 @@ public class PhysicalExperiment {
         String htmlPage = "";
         while ((temp = bufferedReader.readLine()) != null)
             htmlPage += temp;
+        bufferedReader.close();
         Document document = Jsoup.parse(htmlPage);
         Elements elements = document.select("td[class=\"forumRow\"]");
         for (Element element : elements) stringArrayList.add(element.text());

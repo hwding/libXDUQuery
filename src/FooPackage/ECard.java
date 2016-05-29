@@ -93,14 +93,18 @@ public class ECard {
         urlConnection.connect();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
         String BUFFER;
-        if (username.length() != 11)
+        if (username.length() != 11) {
+            bufferedReader.close();
             return false;
+        }
         while ((BUFFER = bufferedReader.readLine()) != null){
             if (BUFFER.contains(username.substring(0,7))) {
                 ID = username;
+                bufferedReader.close();
                 return true;
             }
         }
+        bufferedReader.close();
         return false;
     }
 
@@ -157,6 +161,7 @@ public class ECard {
                 htmlPage+=temp;
             httpURLConnection.getResponseMessage();
             Document document = Jsoup.parse(htmlPage);
+            bufferedReader.close();
 
             /**
              * 获取查询结果占用的页面数

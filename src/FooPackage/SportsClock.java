@@ -56,8 +56,10 @@ public class SportsClock {
         httpURLConnection.connect();
         if ("OK".equals(httpURLConnection.getResponseMessage())){
             ID = username;
+            httpURLConnection.disconnect();
             return true;
         }
+        httpURLConnection.disconnect();
         return false;
     }
 
@@ -70,15 +72,16 @@ public class SportsClock {
         String htmlPage = "";
         while ((temp = bufferedReader.readLine()) != null)
             htmlPage += temp;
+        bufferedReader.close();
 
-        /*
+        /**
          * 解析页面的内容
          */
         Document document = Jsoup.parse(htmlPage);
         Elements elements = document.select("tr[class=\"\"]");
         Elements tds = elements.select("td");
 
-        /*
+        /**
          * 返回字符串数组(stringArrayList)说明:
          *      - 从数组第0项开始, 每五项是一条完整的打卡记录
          *      - 此五项依次代表 [ 列表编号 | 打卡日期 | 打卡时段 | 里程 | 平均速度 ]
