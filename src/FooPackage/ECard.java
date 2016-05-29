@@ -208,7 +208,7 @@ public class ECard {
          *      - 此五项依次代表 [ 交易地点 | 设备编号 | 交易时间 | 交易金额 | 余额 ]
          *      - 数组的最后一项为查询区间内的总消费金额
          *      - 因此, 数组长度为(5n+1), n即代表消费记录的总条数
-         *      - 消费记录的顺序按消费时间从早到晚排列
+         *      - 消费记录的顺序按消费时间从晚到早排列
          *
          *      - 注意: 如果结果中没有记录将返回null而非空数组!
          */
@@ -240,7 +240,6 @@ public class ECard {
         String PASSWORD = scanner.nextLine();
         System.out.println(eCard.checkIsLogin(eCard.login(CAPTCHA, ID, PASSWORD)));
         if (eCard.checkIsLogin(ID)) {
-            eCard.queryTransferInfo("2016-04-21", "2016-05-21");
             System.out.println(eCard.getID());
         }
     }
