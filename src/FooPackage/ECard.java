@@ -154,7 +154,8 @@ public class ECard {
             outputStreamWriter.write(OUTPUT_DATA);
             outputStreamWriter.flush();
             outputStreamWriter.close();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream(), "UTF-8"));
+            BufferedReader bufferedReader = new BufferedReader(
+                                            new InputStreamReader(httpURLConnection.getInputStream(), "UTF-8"));
             String temp;
             String htmlPage = "";
             while ((temp = bufferedReader.readLine()) != null)
@@ -228,16 +229,16 @@ public class ECard {
      * Demo
      * 此部分用于单独测试eCard模块
      */
-    public static void main(String[] args) throws IOException {
-        ECard eCard = new ECard();
-        eCard.getCaptcha(new File("temp_captcha.jpeg"));
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Captcha image generated, please input: ");
-        String CAPTCHA = scanner.nextLine();
-        System.out.print("Student ID (also card number): ");
-        String ID = scanner.nextLine();
-        System.out.print("Password for eCard (6 numbers): ");
-        String PASSWORD = scanner.nextLine();
-        System.out.println(eCard.login(CAPTCHA, ID, PASSWORD));
-    }
+//    public static void main(String[] args) throws IOException {
+//        ECard eCard = new ECard();
+//        eCard.getCaptcha(new File("temp_captcha.jpeg"));
+//        Scanner scanner = new Scanner(System.in);
+//        System.out.print("Captcha image generated, please input: ");
+//        String CAPTCHA = scanner.nextLine();
+//        System.out.print("Student ID (also card number): ");
+//        String ID = scanner.nextLine();
+//        System.out.print("Password for eCard (6 numbers): ");
+//        String PASSWORD = scanner.nextLine();
+//        System.out.println(eCard.login(CAPTCHA, ID, PASSWORD));
+//    }
 }

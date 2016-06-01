@@ -127,9 +127,9 @@ public class PhysicalExperiment {
      * Demo
      * 此部分用于单独测试PhysicalExperiment模块
      */
-    public static void main(String[] args) throws IOException {
-        PhysicalExperiment physicalExperiment = new PhysicalExperiment();
-        if(physicalExperiment.login("用户名", "密码"))
-            physicalExperiment.queryAchievements();
-    }
+//    public static void main(String[] args) throws IOException {
+//        PhysicalExperiment physicalExperiment = new PhysicalExperiment();
+//        if(physicalExperiment.login("用户名", "密码"))
+//            physicalExperiment.queryAchievements();
+//    }
 }

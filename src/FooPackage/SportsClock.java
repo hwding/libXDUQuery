@@ -112,11 +112,11 @@ public class SportsClock {
      * Demo
      * 此部分用于单独测试SportsClock模块
      */
-    public static void main(String[] args) throws IOException {
-        SportsClock sportsClock = new SportsClock();
-        if (sportsClock.login("用户名", "密码")) {
-            sportsClock.queryAchievements();
-            System.out.println(sportsClock.getID());
-        }
-    }
+//    public static void main(String[] args) throws IOException {
+//        SportsClock sportsClock = new SportsClock();
+//        if (sportsClock.login("用户名", "密码")) {
+//            sportsClock.queryAchievements();
+//            System.out.println(sportsClock.getID());
+//        }
+//    }
 }
