@@ -86,7 +86,7 @@ public class ECard {
      * 可用于检测当前SESSION(会话)是否因为已超时而需要重新登录
      * 传入参数为登录时的学号(卡号)
      */
-    private boolean checkIsLogin(String username) throws IOException {
+    public boolean checkIsLogin(String username) throws IOException {
         URL url = new URL(HOST + CARD_USER_INFO_SUFFIX);
         URLConnection urlConnection = url.openConnection();
         urlConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
