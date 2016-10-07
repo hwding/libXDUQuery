@@ -1,16 +1,18 @@
-package FooPackage;
+package module;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import util.XDUQueryModule;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-public class SportsClock {
+public class SportsClock extends XDUQueryModule{
     private final static String HOST = "http://210.27.8.14";
     private final static String LOGIN_SUFFIX = "/login";
     private final static String RUNNER_SUFFIX = "/runner/";
@@ -18,11 +20,14 @@ public class SportsClock {
     private String JSESSIONID;
     private String ID = "";
 
-    /**
+    /*
      * 登录方法须传入 [ 学号 | 密码 ] 作为参数
      * 返回是否登录成功
      */
-    public boolean login (String username, String password) throws IOException {
+    public boolean login (String... params) throws IOException {
+        String password = params[0];
+        String username = params[1];
+
         URL url = new URL(HOST+LOGIN_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setDoOutput(true);
@@ -45,10 +50,10 @@ public class SportsClock {
         return checkIsLogin(username);
     }
 
-    /**
+    /*
      * 通过直接请求内部页面并检查返回值判断是否登录成功(首次登录时自动调用)
      */
-    public boolean checkIsLogin(String username) throws IOException {
+    private boolean checkIsLogin(String username) throws IOException {
         URL url = new URL(HOST+RUNNER_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setInstanceFollowRedirects(false);
@@ -63,7 +68,7 @@ public class SportsClock {
         return false;
     }
 
-    public ArrayList<String> queryAchievements() throws IOException {
+    public ArrayList<String> query(String... params) throws IOException {
         URL url = new URL(HOST+ACHIEVEMENTS_SUFFIX);
         URLConnection urlConnection = url.openConnection();
         urlConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
@@ -74,14 +79,11 @@ public class SportsClock {
             htmlPage += temp;
         bufferedReader.close();
 
-        /**
-         * 解析页面的内容
-         */
         Document document = Jsoup.parse(htmlPage);
         Elements elements = document.select("tr[class=\"\"]");
         Elements tds = elements.select("td");
 
-        /**
+        /*
          * 返回字符串数组(stringArrayList)说明:
          *      - 从数组第0项开始, 每五项是一条完整的打卡记录
          *      - 此五项依次代表 [ 列表编号 | 打卡日期 | 打卡时段 | 里程 | 平均速度 ]
@@ -99,7 +101,7 @@ public class SportsClock {
         return stringArrayList;
     }
 
-    /**
+    /*
      * 用于返回当前会话的学号
      *
      * 注意: 当且仅当checkIsLogin()方法被调用且确认已登录成功(checkIsLogin()返回true)时, 其返回为当前会话的学号, 否则返回空内容
@@ -107,16 +109,4 @@ public class SportsClock {
     public String getID(){
         return ID;
     }
-
-    /**
-     * Demo
-     * 此部分用于单独测试SportsClock模块
-     */
-//    public static void main(String[] args) throws IOException {
-//        SportsClock sportsClock = new SportsClock();
-//        if (sportsClock.login("用户名", "密码")) {
-//            sportsClock.queryAchievements();
-//            System.out.println(sportsClock.getID());
-//        }
-//    }
 }

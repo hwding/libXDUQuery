@@ -1,4 +1,4 @@
-package FooPackage;
+package module;
 
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -51,8 +51,4 @@ public class WaterAndElectricity {
         return false;
     }
 
-    public static void main(String[] args) throws IOException {
-        WaterAndElectricity waterAndElectricity = new WaterAndElectricity();
-        System.out.println(waterAndElectricity.login("2011011212", "123456"));
-    }
 }

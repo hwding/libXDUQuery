@@ -1,18 +1,18 @@
-package FooPackage;
+package module;
 
 import org.jsoup.Jsoup;
 import org.jsoup.helper.StringUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import util.XDUQueryModule;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Scanner;
 
-public class ECard {
+public class ECard extends XDUQueryModule{
     private final static String HOST = "http://ecard.xidian.edu.cn";
     private final static String PRE_LOGIN_SUFFIX = "/login.jsp";
     private final static String CARD_USER_INFO_SUFFIX = "/cardUserManager.do?method=searchCardUserInfo";
@@ -59,18 +59,22 @@ public class ECard {
      * 登录方法须传入 [ 当前验证码 | 学号(卡号) | 一卡通密码 ] 作为参数
      * 返回是否登录成功
      */
-    public boolean login(String CAPTCHA, String ID, String PASSWORD) throws IOException {
+    public boolean login(String... params) throws IOException {
+        String username = params[0];
+        String password = params[1];
+        String captcha = params[2];
+
         URL url = new URL(HOST + LOGIN_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setRequestMethod("POST");
         httpURLConnection.setDoOutput(true);
         httpURLConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
         String OUTPUT_DATA = "flag=1&code=";
-        OUTPUT_DATA+=ID;
+        OUTPUT_DATA+=username;
         OUTPUT_DATA+="&pwd=";
-        OUTPUT_DATA+=PASSWORD;
+        OUTPUT_DATA+=password;
         OUTPUT_DATA+="&cardCheckCode=";
-        OUTPUT_DATA+=CAPTCHA;
+        OUTPUT_DATA+=captcha;
         httpURLConnection.connect();
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(httpURLConnection.getOutputStream(), "UTF-8");
         outputStreamWriter.write(OUTPUT_DATA);
@@ -78,7 +82,7 @@ public class ECard {
         outputStreamWriter.close();
         httpURLConnection.getResponseMessage();
         httpURLConnection.disconnect();
-        return checkIsLogin(ID);
+        return checkIsLogin(username);
     }
 
     /**
@@ -86,7 +90,7 @@ public class ECard {
      * 可用于检测当前SESSION(会话)是否因为已超时而需要重新登录
      * 传入参数为登录时的学号(卡号)
      */
-    public boolean checkIsLogin(String username) throws IOException {
+    private boolean checkIsLogin(String username) throws IOException {
         URL url = new URL(HOST + CARD_USER_INFO_SUFFIX);
         URLConnection urlConnection = url.openConnection();
         urlConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
@@ -112,9 +116,12 @@ public class ECard {
      * 查询方法须传入 [ 开始日期 | 结束日期 ] 作为参数
      * 日期格式: yyyy-MM-dd
      *
-     * 注意: 起止日期区间不得超过一个月, 否则将返回垃圾结果(Rubbish in, Rubbish out)
+     * 注意: 起止日期区间不得超过一个月, 否则将返回垃圾结果
      */
-    public ArrayList<String> queryTransferInfo(String fromDate, String toDate) throws IOException {
+    public ArrayList<String> query(String... params) throws IOException {
+        String fromDate = params[0];
+        String toDate = params[1];
+
         int maxPage = 1;
         boolean FLAG_GOT_MAX_PAGE = false;
         final char SPACE = 160;
@@ -122,7 +129,7 @@ public class ECard {
         URL url = new URL(HOST + TRANSFER_INFO_SUFFIX);
         HttpURLConnection httpURLConnection = null;
 
-        /**
+        /*
          * 遍历所有结果页面
          */
         for (int page=1; page<=maxPage; page++) {
@@ -138,7 +145,7 @@ public class ECard {
             OUTPUT_DATA += toDate;
             OUTPUT_DATA += "&findType=";
 
-            /**
+            /*
              * 请求类型(findType)说明:
              *      - 1210 卡消费流水
              *      - 1130 卡充值流水
@@ -164,7 +171,7 @@ public class ECard {
             Document document = Jsoup.parse(htmlPage);
             bufferedReader.close();
 
-            /**
+            /*
              * 获取查询结果占用的页面数
              */
             if (!FLAG_GOT_MAX_PAGE) {
@@ -178,7 +185,7 @@ public class ECard {
                 }
             }
 
-            /**
+            /*
              * 解析当前页面的内容
              */
             Elements tables = document.select("table");
@@ -193,7 +200,7 @@ public class ECard {
 
         httpURLConnection.disconnect();
 
-        /**
+        /*
          * 如果结果中没有记录将返回null而非空数组!
          */
         if (stringArrayList.size() == 0)
@@ -203,7 +210,7 @@ public class ECard {
                 .substring(stringArrayList.get(stringArrayList.size()-1).indexOf("：")+1,
                         stringArrayList.get(stringArrayList.size()-1).indexOf(" ")));
 
-        /**
+        /*
          * 返回字符串数组(stringArrayList)说明:
          *      - 从数组第0项开始, 每五项是一条完整的流水记录
          *      - 此五项依次代表 [ 交易地点 | 设备编号 | 交易时间 | 交易金额 | 余额 ]
@@ -224,21 +231,4 @@ public class ECard {
     public String getID(){
         return ID;
     }
-
-    /**
-     * Demo
-     * 此部分用于单独测试eCard模块
-     */
-//    public static void main(String[] args) throws IOException {
-//        ECard eCard = new ECard();
-//        eCard.getCaptcha(new File("temp_captcha.jpeg"));
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.print("Captcha image generated, please input: ");
-//        String CAPTCHA = scanner.nextLine();
-//        System.out.print("Student ID (also card number): ");
-//        String ID = scanner.nextLine();
-//        System.out.print("Password for eCard (6 numbers): ");
-//        String PASSWORD = scanner.nextLine();
-//        System.out.println(eCard.login(CAPTCHA, ID, PASSWORD));
-//    }
 }
