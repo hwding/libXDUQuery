@@ -1,11 +1,11 @@
-package module;
+package com.amastigote.xdu.query.module;
 
 import org.jsoup.Jsoup;
 import org.jsoup.helper.StringUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import util.XDUQueryModule;
+import com.amastigote.xdu.query.util.XDUQueryModule;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;

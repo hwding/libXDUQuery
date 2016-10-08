@@ -1,4 +1,4 @@
-package module;
+package com.amastigote.xdu.query.module;
 
 import org.json.JSONObject;
 import java.io.BufferedReader;

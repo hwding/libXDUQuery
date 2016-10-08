@@ -1,9 +1,9 @@
-package test;
+package com.amastigote.xdu.query.test;
 
-import module.ECard;
-import module.PhysicalExperiment;
-import module.SportsClock;
-import module.WaterAndElectricity;
+import com.amastigote.xdu.query.module.ECard;
+import com.amastigote.xdu.query.module.PhysicalExperiment;
+import com.amastigote.xdu.query.module.SportsClock;
+import com.amastigote.xdu.query.module.WaterAndElectricity;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
