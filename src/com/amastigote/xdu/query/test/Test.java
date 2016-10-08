@@ -11,8 +11,8 @@ import java.util.Scanner;
 
 public class Test {
     public static void main(String[] args) {
-        PhysicalExperiment physicalExperiment = new PhysicalExperiment();
         try {
+            PhysicalExperiment physicalExperiment = new PhysicalExperiment();
             System.out.println(physicalExperiment.checkIsLogin("15130188016"));
             if (physicalExperiment.login("15130188016", "deleted_a")) {
                 ArrayList<String> stringArrayList_a = physicalExperiment.query();
