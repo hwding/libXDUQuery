@@ -9,17 +9,26 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
+
+
+
 public class WaterAndElectricity {
     private final static String HOST = "http://10.168.55.50:8088";
     private final static String PRE_LOGIN_SUFFIX = "/searchWap/Login.aspx";
     private final static String LOGIN_SUFFIX = "/ajaxpro/SearchWap_Login,App_Web_fghipt60.ashx";
     private String ASP_dot_NET_SessionId;
 
+
+    public static void main(String args[]) throws IOException{
+        WaterAndElectricity waterAndElectricity = new WaterAndElectricity();
+        System.out.println(waterAndElectricity.login("2011022109","123456"));
+    }
     public WaterAndElectricity() throws IOException {
         URL url = new URL(HOST+PRE_LOGIN_SUFFIX);
         URLConnection urlConnection = url.openConnection();
         urlConnection.connect();
         ASP_dot_NET_SessionId = urlConnection.getHeaderField("Set-Cookie");
+
         ASP_dot_NET_SessionId = ASP_dot_NET_SessionId.substring(
                 ASP_dot_NET_SessionId.indexOf("=")+1,
                 ASP_dot_NET_SessionId.indexOf(";"));
