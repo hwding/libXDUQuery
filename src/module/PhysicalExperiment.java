@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class PhysicalExperiment extends XDUQueryModule{
     private final static String HOST = "http://wlsy.xidian.edu.cn/phyEws";
     private final static String SELECTED_EXPERIMENT_SUFFIX = "/student/select.aspx";
+    private final static String STUDENT_SUFFIX = "/student/student.aspx";
     private final static String LOGIN_SUFFIX = "/default.aspx";
     private String PhyEwsAuth;
     private String ID = "";
@@ -85,27 +86,44 @@ public class PhysicalExperiment extends XDUQueryModule{
         PhyEwsAuth = httpURLConnection.getHeaderField("Set-Cookie");
         if (PhyEwsAuth != null) {
             PhyEwsAuth = PhyEwsAuth.substring(PhyEwsAuth.indexOf("=") + 1, PhyEwsAuth.indexOf(";"));
-            ID = username;
-            httpURLConnection.disconnect();
-            return true;
+            if (checkIsLogin(username)) {
+                ID = username;
+                httpURLConnection.disconnect();
+                return true;
+            }
+            else
+            return false;
         }
         httpURLConnection.disconnect();
         return false;
     }
 
-    public ArrayList<String> query(String... params) throws IOException {
-        ArrayList<String> stringArrayList = new ArrayList<>();
-        URL url = new URL(HOST+SELECTED_EXPERIMENT_SUFFIX);
+    /*
+     * 通过页面是否存在学生信息判断是否登陆成功
+     */
+    public boolean checkIsLogin(String username) throws IOException {
+        Document document = getPage(STUDENT_SUFFIX);
+        Elements elements = document.select("span[id=\"Stu\"]");
+        return elements.size() > 0;
+    }
+
+    private Document getPage(String suffix) throws IOException{
+        URL url = new URL(HOST+suffix);
         URLConnection urlConnection = url.openConnection();
         urlConnection.setRequestProperty("Cookie", "PhyEws_StuName=;PhyEws_StuType=1;.PhyEwsAuth="+PhyEwsAuth);
         BufferedReader bufferedReader = new BufferedReader(
-                                        new InputStreamReader(urlConnection.getInputStream(), "GBK"));
+                new InputStreamReader(urlConnection.getInputStream(), "GBK"));
         String temp;
         String htmlPage = "";
         while ((temp = bufferedReader.readLine()) != null)
             htmlPage += temp;
         bufferedReader.close();
-        Document document = Jsoup.parse(htmlPage);
+        return Jsoup.parse(htmlPage);
+    }
+
+    public ArrayList<String> query(String... params) throws IOException {
+        Document document = getPage(SELECTED_EXPERIMENT_SUFFIX);
+        ArrayList<String> stringArrayList = new ArrayList<>();
         Elements elements = document.select("td[class=\"forumRow\"]");
         for (Element element : elements) stringArrayList.add(element.text());
 

@@ -53,7 +53,7 @@ public class SportsClock extends XDUQueryModule{
     /*
      * 通过直接请求内部页面并检查返回值判断是否登录成功(首次登录时自动调用)
      */
-    private boolean checkIsLogin(String username) throws IOException {
+    public boolean checkIsLogin(String username) throws IOException {
         URL url = new URL(HOST+RUNNER_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setInstanceFollowRedirects(false);
