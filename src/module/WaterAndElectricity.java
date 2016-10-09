@@ -1,6 +1,11 @@
 package module;
 
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,15 +21,18 @@ public class WaterAndElectricity {
     private final static String PRE_LOGIN_SUFFIX = "/searchWap/Login.aspx";
     private final static String LOGIN_SUFFIX = "/ajaxpro/SearchWap_Login,App_Web_fghipt60.ashx";
     private final static String USEINFO_SUFFIX = "/SearchWap/webFrm/useInfo.aspx";
+
+    private final static String __VIEWSTATE = "/wEPDwUKLTUwNjExOTI3Nw9kFgICAw9kFgICAQ8PFgIeBFRleHQFCjIwMTEwMjIxMDlkZGQ=";
+
+    private String username;        //login()中保存用户名，作为useinfo_query方法的post参数使用
     private String ASP_dot_NET_SessionId;
-    private String __VIEWSTATE = "/wEPDwUKLTUwNjExOTI3Nw9kFgICAw9kFgICAQ8PFgIeBFRleHQFCjIwMTEwMjIxMDlkZGQ=";
 
 
-    public static void main(String args[]) throws IOException{
+   /* public static void main(String args[]) throws IOException{
         WaterAndElectricity waterAndElectricity = new WaterAndElectricity();
-        System.out.println(waterAndElectricity.login("2011022109","123456"));
+        System.out.println(waterAndElectricity.login("2011022212","123456"));
         waterAndElectricity.useInfo_query();
-    }
+    }*/
 
     public WaterAndElectricity() throws IOException {
         URL url = new URL(HOST+PRE_LOGIN_SUFFIX);
@@ -38,6 +46,8 @@ public class WaterAndElectricity {
     }
 
     public boolean login(String userName, String password) throws IOException {
+        this.username = userName;       //保存用户名
+
         URL url = new URL(HOST+LOGIN_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setRequestMethod("POST");
@@ -55,13 +65,6 @@ public class WaterAndElectricity {
         outputStreamWriter.close();
         BufferedReader bufferedReader = new BufferedReader(
                                         new InputStreamReader(httpURLConnection.getInputStream()));
-        String temp;
-        String result = "";
-       /* while(!((temp = bufferedReader.readLine()) == null)){
-            result += temp;
-        }
-
-        System.out.println(result);*/
 
       if ("\"1\"".equals(bufferedReader.readLine())) {
             httpURLConnection.disconnect();
@@ -85,9 +88,9 @@ public class WaterAndElectricity {
         OUTPUT_DATA += "近三个月";
         OUTPUT_DATA += "&__VIEWSTATE=";
         OUTPUT_DATA += __VIEWSTATE;
-        OUTPUT_DATA += "&HiddenField_webName=";
+        OUTPUT_DATA += "&HiddenField_webName=";     //该参数为空
         OUTPUT_DATA += "&HiddenField_UserID=";
-        OUTPUT_DATA += "2011022109";
+        OUTPUT_DATA += username;
 
         httpURLConnection.connect();
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(httpURLConnection.getOutputStream(),"UTF-8");
@@ -96,14 +99,26 @@ public class WaterAndElectricity {
         outputStreamWriter.close();
         System.out.println(httpURLConnection.getResponseMessage());
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+
         String temp;
         String htmlPage = "";
         while ((temp = bufferedReader.readLine()) != null)
             htmlPage += temp + "\n" ;
+
         bufferedReader.close();
 
-        System.out.println(htmlPage);
-        return null;
+        Document document = Jsoup.parse(htmlPage);
+        Elements elements = document.select("td");
+
+        ArrayList<String> stringArrayList = new ArrayList<>();
+
+        for(Element td : elements){
+            if(!"".equals(td.text())){
+                stringArrayList.add(td.text());
+            }
+        }
+        return stringArrayList;
+
     }
 
 }
