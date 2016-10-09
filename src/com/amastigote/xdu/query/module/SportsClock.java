@@ -17,7 +17,7 @@ public class SportsClock extends XDUQueryModule{
     private final static String LOGIN_SUFFIX = "/login";
     private final static String RUNNER_SUFFIX = "/runner/";
     private final static String ACHIEVEMENTS_SUFFIX = "/runner/achievements.html";
-    private String JSESSIONID;
+    private String JSESSIONID = "";
     private String ID = "";
 
     /*

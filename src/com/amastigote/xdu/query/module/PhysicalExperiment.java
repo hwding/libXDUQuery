@@ -17,7 +17,7 @@ public class PhysicalExperiment extends XDUQueryModule{
     private final static String SELECTED_EXPERIMENT_SUFFIX = "/student/select.aspx";
     private final static String STUDENT_SUFFIX = "/student/student.aspx";
     private final static String LOGIN_SUFFIX = "/default.aspx";
-    private String PhyEwsAuth;
+    private String PhyEwsAuth = "";
     private String ID = "";
 
     private static String preLogin() throws IOException {

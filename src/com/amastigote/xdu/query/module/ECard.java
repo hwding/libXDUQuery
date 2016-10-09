@@ -19,7 +19,7 @@ public class ECard extends XDUQueryModule{
     private final static String LOGIN_SUFFIX = "/cardUserManager.do?method=checkLogin";
     private final static String CAPTCHA_SUFFIX = "/authImage";
     private final static String TRANSFER_INFO_SUFFIX = "/cardUserManager.do?method=searchTrjnInfos";
-    private String JSESSIONID;
+    private String JSESSIONID = "";
     private String ID = "";
 
     /*
