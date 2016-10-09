@@ -8,21 +8,24 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-
-
+import java.util.ArrayList;
 
 
 public class WaterAndElectricity {
     private final static String HOST = "http://10.168.55.50:8088";
     private final static String PRE_LOGIN_SUFFIX = "/searchWap/Login.aspx";
     private final static String LOGIN_SUFFIX = "/ajaxpro/SearchWap_Login,App_Web_fghipt60.ashx";
+    private final static String USEINFO_SUFFIX = "/SearchWap/webFrm/useInfo.aspx";
     private String ASP_dot_NET_SessionId;
+    private String __VIEWSTATE = "/wEPDwUKLTUwNjExOTI3Nw9kFgICAw9kFgICAQ8PFgIeBFRleHQFCjIwMTEwMjIxMDlkZGQ=";
 
 
     public static void main(String args[]) throws IOException{
         WaterAndElectricity waterAndElectricity = new WaterAndElectricity();
         System.out.println(waterAndElectricity.login("2011022109","123456"));
+        waterAndElectricity.useInfo_query();
     }
+
     public WaterAndElectricity() throws IOException {
         URL url = new URL(HOST+PRE_LOGIN_SUFFIX);
         URLConnection urlConnection = url.openConnection();
@@ -52,12 +55,55 @@ public class WaterAndElectricity {
         outputStreamWriter.close();
         BufferedReader bufferedReader = new BufferedReader(
                                         new InputStreamReader(httpURLConnection.getInputStream()));
-        if ("\"1\"".equals(bufferedReader.readLine())) {
+        String temp;
+        String result = "";
+       /* while(!((temp = bufferedReader.readLine()) == null)){
+            result += temp;
+        }
+
+        System.out.println(result);*/
+
+      if ("\"1\"".equals(bufferedReader.readLine())) {
             httpURLConnection.disconnect();
             return true;
         }
+
+
         httpURLConnection.disconnect();
         return false;
+    }
+
+    public ArrayList<String> useInfo_query(String... params) throws IOException{
+        URL url = new URL(HOST+USEINFO_SUFFIX);
+       HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+        httpURLConnection.setDoOutput(true);
+        httpURLConnection.setRequestMethod("POST");
+        httpURLConnection.setUseCaches(false);
+        httpURLConnection.setInstanceFollowRedirects(false);
+
+        String OUTPUT_DATA = "But_Seach3=";
+        OUTPUT_DATA += "近三个月";
+        OUTPUT_DATA += "&__VIEWSTATE=";
+        OUTPUT_DATA += __VIEWSTATE;
+        OUTPUT_DATA += "&HiddenField_webName=";
+        OUTPUT_DATA += "&HiddenField_UserID=";
+        OUTPUT_DATA += "2011022109";
+
+        httpURLConnection.connect();
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(httpURLConnection.getOutputStream(),"UTF-8");
+        outputStreamWriter.write(OUTPUT_DATA);
+        outputStreamWriter.flush();
+        outputStreamWriter.close();
+        System.out.println(httpURLConnection.getResponseMessage());
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+        String temp;
+        String htmlPage = "";
+        while ((temp = bufferedReader.readLine()) != null)
+            htmlPage += temp + "\n" ;
+        bufferedReader.close();
+
+        System.out.println(htmlPage);
+        return null;
     }
 
 }
