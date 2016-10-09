@@ -22,7 +22,7 @@ public class ECard extends XDUQueryModule{
     private String JSESSIONID;
     private String ID = "";
 
-    /**
+    /*
      * 初始化时从服务器获得一个新的JSESSIONID并储存
      * 此JSESSIONID将作为整个SESSION(会话)的凭证
      */
@@ -34,7 +34,7 @@ public class ECard extends XDUQueryModule{
         JSESSIONID = JSESSIONID.substring(JSESSIONID.indexOf("=")+1, JSESSIONID.indexOf(";"));
     }
 
-    /**
+    /*
      * 加载验证码须传入 [ 目标文件 ] 作为参数
      * 验证码将会写入目标文件, 文件须为JPEG格式
      * 登录(或重新登录)前必须调用此方法以刷新此次SESSION(会话)的验证码
@@ -55,7 +55,7 @@ public class ECard extends XDUQueryModule{
         fileOutputStream.close();
     }
 
-    /**
+    /*
      * 登录方法须传入 [ 当前验证码 | 学号(卡号) | 一卡通密码 ] 作为参数
      * 返回是否登录成功
      */
@@ -85,7 +85,7 @@ public class ECard extends XDUQueryModule{
         return checkIsLogin(username);
     }
 
-    /**
+    /*
      * 通过比对用户信息页面返回结果与登录时的学号判断是否登录成功(首次登录时自动调用)
      * 可用于检测当前SESSION(会话)是否因为已超时而需要重新登录
      * 传入参数为登录时的学号(卡号)
@@ -108,11 +108,12 @@ public class ECard extends XDUQueryModule{
                 return true;
             }
         }
+        ID = "";
         bufferedReader.close();
         return false;
     }
 
-    /**
+    /*
      * 查询方法须传入 [ 开始日期 | 结束日期 ] 作为参数
      * 日期格式: yyyy-MM-dd
      *

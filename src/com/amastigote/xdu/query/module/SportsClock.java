@@ -64,6 +64,8 @@ public class SportsClock extends XDUQueryModule{
             httpURLConnection.disconnect();
             return true;
         }
+
+        ID = "";
         httpURLConnection.disconnect();
         return false;
     }

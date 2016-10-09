@@ -86,13 +86,8 @@ public class PhysicalExperiment extends XDUQueryModule{
         PhyEwsAuth = httpURLConnection.getHeaderField("Set-Cookie");
         if (PhyEwsAuth != null) {
             PhyEwsAuth = PhyEwsAuth.substring(PhyEwsAuth.indexOf("=") + 1, PhyEwsAuth.indexOf(";"));
-            if (checkIsLogin(username)) {
-                ID = username;
-                httpURLConnection.disconnect();
-                return true;
-            }
-            else
-            return false;
+            httpURLConnection.disconnect();
+            return checkIsLogin(username);
         }
         httpURLConnection.disconnect();
         return false;
@@ -104,13 +99,21 @@ public class PhysicalExperiment extends XDUQueryModule{
     public boolean checkIsLogin(String username) throws IOException {
         Document document = getPage(STUDENT_SUFFIX);
         Elements elements = document.select("span[id=\"Stu\"]");
-        return elements.size() > 0;
+
+        if (elements.size() > 0) {
+            ID = username;
+            return true;
+        }
+        else {
+            ID = "";
+            return false;
+        }
     }
 
     private Document getPage(String suffix) throws IOException{
         URL url = new URL(HOST+suffix);
         URLConnection urlConnection = url.openConnection();
-        urlConnection.setRequestProperty("Cookie", "PhyEws_StuName=;PhyEws_StuType=1;.PhyEwsAuth="+PhyEwsAuth);
+        urlConnection.setRequestProperty("Cookie", "PhyEws_StuName=;PhyEws_StuType=1;.PhyEwsAuth=" + PhyEwsAuth);
         BufferedReader bufferedReader = new BufferedReader(
                 new InputStreamReader(urlConnection.getInputStream(), "GBK"));
         String temp;
