@@ -1,3 +1,22 @@
+/*
+        Copyright 2016 @hwding & @TrafalgarZZZ
+
+        Licensed under the Apache License, Version 2.0 (the "License");
+        you may not use this file except in compliance with the License.
+        You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+        Unless required by applicable law or agreed to in writing, software
+        distributed under the License is distributed on an "AS IS" BASIS,
+        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        See the License for the specific language governing permissions and
+        limitations under the License.
+
+            GitHub: https://github.com/hwding/libXDUQuery
+            E-mail: m@amastigote.com
+*/
+
 package com.amastigote.xdu.query.module;
 
 import com.amastigote.xdu.query.util.XDUQueryModule;
@@ -43,6 +62,8 @@ public class WaterAndElectricity extends XDUQueryModule{
 
 
     public boolean login(String... params) throws IOException {
+        if (params.length != 2)
+            throw new IllegalArgumentException("Bad parameter, check document for help");
         preLogin();
 
         String username = params[0];
@@ -69,7 +90,9 @@ public class WaterAndElectricity extends XDUQueryModule{
         return checkIsLogin(username);
     }
 
-    public ArrayList<String> query(String... params) throws IOException{
+    public ArrayList<String> query(String... params) throws IOException {
+        if (params.length != 1)
+            throw new IllegalArgumentException("Bad parameter, check document for help");
         String type = params[0];
         ArrayList<String> stringArrayList = new ArrayList<>();
         switch (type) {
@@ -82,6 +105,8 @@ public class WaterAndElectricity extends XDUQueryModule{
             case "metInfo":
                 stringArrayList = query_metInfo();
                 break;
+            default:
+                throw new IllegalArgumentException("Bad parameter, check document for help");
         }
 
         return stringArrayList;

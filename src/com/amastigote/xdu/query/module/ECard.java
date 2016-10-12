@@ -1,3 +1,22 @@
+/*
+        Copyright 2016 @hwding & @TrafalgarZZZ
+
+        Licensed under the Apache License, Version 2.0 (the "License");
+        you may not use this file except in compliance with the License.
+        You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+        Unless required by applicable law or agreed to in writing, software
+        distributed under the License is distributed on an "AS IS" BASIS,
+        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        See the License for the specific language governing permissions and
+        limitations under the License.
+
+            GitHub: https://github.com/hwding/libXDUQuery
+            E-mail: m@amastigote.com
+*/
+
 package com.amastigote.xdu.query.module;
 
 import org.jsoup.Jsoup;
@@ -60,6 +79,9 @@ public class ECard extends XDUQueryModule{
      * 返回是否登录成功
      */
     public boolean login(String... params) throws IOException {
+        if (params.length != 3)
+            throw new IllegalArgumentException("Bad parameter, check document for help");
+
         String username = params[0];
         String password = params[1];
         String captcha = params[2];
@@ -120,6 +142,9 @@ public class ECard extends XDUQueryModule{
      * 注意: 起止日期区间不得超过一个月, 否则将返回垃圾结果
      */
     public ArrayList<String> query(String... params) throws IOException {
+        if (params.length != 2)
+            throw new IllegalArgumentException("Bad parameter, check document for help");
+
         String fromDate = params[0];
         String toDate = params[1];
 
