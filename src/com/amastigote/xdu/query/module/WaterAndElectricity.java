@@ -94,7 +94,7 @@ public class WaterAndElectricity extends XDUQueryModule{
         if (params.length != 1)
             throw new IllegalArgumentException("Bad parameter, check document for help");
         String type = params[0];
-        ArrayList<String> stringArrayList = new ArrayList<>();
+        ArrayList<String> stringArrayList;
         switch (type) {
             case "payInfo":
                 stringArrayList = query_payInfo();
