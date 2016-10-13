@@ -64,11 +64,10 @@ public class Test {
 
             WaterAndElectricity waterAndElectricity = new WaterAndElectricity();
             if (waterAndElectricity.login("2011022212","deleted_d")) {
-                ArrayList<String> stringArrayList_d = waterAndElectricity.query("useInfo");
+                ArrayList<String> stringArrayList_d = waterAndElectricity.query("metInfo");
                 System.out.println(stringArrayList_d.size());
                 System.out.println(stringArrayList_d);
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }

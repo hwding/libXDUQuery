@@ -35,13 +35,17 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-public class WaterAndElectricity extends XDUQueryModule{
+public class WaterAndElectricity extends XDUQueryModule {
     private final static String HOST = "http://10.168.55.50:8088";
     private final static String PRE_LOGIN_SUFFIX = "/searchWap/Login.aspx";
     private final static String LOGIN_SUFFIX = "/ajaxpro/SearchWap_Login,App_Web_fghipt60.ashx";
     private final static String USEINFO_SUFFIX = "/SearchWap/webFrm/useInfo.aspx";
     private final static String PAYINFO_SUFFIX = "/SearchWap/webFrm/pay.aspx";
     private final static String METINFO_SUFFIX = "/SearchWap/webFrm/met.aspx";
+
+    /*
+        todo: make query param public final static String constant
+     */
 
     private static String VIEWSTATE = "";
 
@@ -198,20 +202,7 @@ public class WaterAndElectricity extends XDUQueryModule{
     }
 
     private ArrayList<String> query_metInfo() throws IOException {
-        URL url = new URL(HOST + METINFO_SUFFIX);
-        URLConnection urlConnection = url.openConnection();
-        urlConnection.setRequestProperty("Cookie","ASP.NET_SessionId=" + ASP_dot_NET_SessionId);
-
-        BufferedReader bufferedReader = new BufferedReader(
-                new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
-        String temp;
-        String htmlPage = "";
-        while ((temp = bufferedReader.readLine()) != null)
-            htmlPage += temp;
-        bufferedReader.close();
-
-        htmlPage = htmlPage.replaceAll("&nbsp;", " ");
-        Document document = Jsoup.parse(htmlPage);
+        Document document = getPage("", METINFO_SUFFIX);
         Elements elements = document.select("td");
 
         ArrayList<String> stringArrayList = new ArrayList<>();
@@ -245,7 +236,7 @@ public class WaterAndElectricity extends XDUQueryModule{
         VIEWSTATE = elements_VIEWSTATE.get(0).attr("value");
     }
 
-    private Document getPage(String output_data,String host_suffix) throws IOException {
+    private Document getPage(String output_data, String host_suffix) throws IOException {
         URL url = new URL(HOST + host_suffix);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setDoOutput(true);
