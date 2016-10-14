@@ -23,7 +23,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import com.amastigote.xdu.query.util.XDUQueryModule;
+import com.amastigote.xdu.query.util.XDUQueryBase;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,7 +31,7 @@ import java.io.OutputStreamWriter;
 import java.net.*;
 import java.util.ArrayList;
 
-public class PhysicalExperiment extends XDUQueryModule {
+public class PhysicalExperiment implements XDUQueryBase {
     private final static String HOST = "http://wlsy.xidian.edu.cn/phyEws";
     private final static String SELECTED_EXPERIMENT_SUFFIX = "/student/select.aspx";
     private final static String STUDENT_SUFFIX = "/student/student.aspx";
@@ -41,7 +41,7 @@ public class PhysicalExperiment extends XDUQueryModule {
     private String ID = "";
 
     private static String preLogin() throws IOException {
-        URL url = new URL(HOST+LOGIN_SUFFIX);
+        URL url = new URL(HOST + LOGIN_SUFFIX);
         URLConnection urlConnection = url.openConnection();
         urlConnection.connect();
         BufferedReader bufferedReader = new BufferedReader(
@@ -49,7 +49,7 @@ public class PhysicalExperiment extends XDUQueryModule {
         String temp;
         String htmlPage = "";
         while ((temp = bufferedReader.readLine()) != null)
-            htmlPage+=temp;
+            htmlPage += temp;
         return htmlPage;
 
     }
@@ -83,7 +83,7 @@ public class PhysicalExperiment extends XDUQueryModule {
         String password = params[1];
 
         ArrayList<String> pageAttributes = getPageAttributes(preLogin());
-        URL url = new URL(HOST+LOGIN_SUFFIX);
+        URL url = new URL(HOST + LOGIN_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setDoOutput(true);
         httpURLConnection.setRequestMethod("POST");

@@ -19,7 +19,7 @@
 
 package com.amastigote.xdu.query.module;
 
-import com.amastigote.xdu.query.util.XDUQueryModule;
+import com.amastigote.xdu.query.util.XDUQueryBase;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -35,7 +35,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-public class WaterAndElectricity extends XDUQueryModule {
+public class WaterAndElectricity implements XDUQueryBase {
     private final static String HOST = "http://10.168.55.50:8088";
     private final static String PRE_LOGIN_SUFFIX = "/searchWap/Login.aspx";
     private final static String LOGIN_SUFFIX = "/ajaxpro/SearchWap_Login,App_Web_fghipt60.ashx";
@@ -91,8 +91,11 @@ public class WaterAndElectricity extends XDUQueryModule {
     /*
         static fields for query kind
      */
+    @SuppressWarnings("WeakerAccess")
     public static final String PAY = "payInfo";
+    @SuppressWarnings("WeakerAccess")
     public static final String USE = "useInfo";
+    @SuppressWarnings("WeakerAccess")
     public static final String METER = "metInfo";
 
     /*
@@ -132,7 +135,9 @@ public class WaterAndElectricity extends XDUQueryModule {
     /*
         static fields for query duration
      */
+    @SuppressWarnings("WeakerAccess")
     public static final String ONE_MONTH = "近一个月";
+    @SuppressWarnings("WeakerAccess")
     public static final String THREE_MONTH = "近三个月";
 
     private ArrayList<String> query_payInfo(String duration) throws IOException {

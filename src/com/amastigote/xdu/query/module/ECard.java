@@ -19,19 +19,20 @@
 
 package com.amastigote.xdu.query.module;
 
+import com.amastigote.xdu.query.util.XDUQueryCaptcha;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.StringUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import com.amastigote.xdu.query.util.XDUQueryModule;
+import com.amastigote.xdu.query.util.XDUQueryBase;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-public class ECard extends XDUQueryModule {
+public class ECard implements XDUQueryBase, XDUQueryCaptcha {
     private final static String HOST = "http://ecard.xidian.edu.cn";
     private final static String PRE_LOGIN_SUFFIX = "/login.jsp";
     private final static String CARD_USER_INFO_SUFFIX = "/cardUserManager.do?method=searchCardUserInfo";
@@ -51,7 +52,7 @@ public class ECard extends XDUQueryModule {
         URLConnection urlConnection = url.openConnection();
         urlConnection.connect();
         JSESSIONID = urlConnection.getHeaderField("Set-Cookie");
-        JSESSIONID = JSESSIONID.substring(JSESSIONID.indexOf("=")+1, JSESSIONID.indexOf(";"));
+        JSESSIONID = JSESSIONID.substring(JSESSIONID.indexOf("=") + 1, JSESSIONID.indexOf(";"));
     }
 
     /*
@@ -62,7 +63,7 @@ public class ECard extends XDUQueryModule {
     public void getCaptcha(File file) throws IOException {
         URL url = new URL(HOST + CAPTCHA_SUFFIX);
         URLConnection urlConnection = url.openConnection();
-        urlConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
+        urlConnection.setRequestProperty("Cookie", "JSESSIONID=" + JSESSIONID);
         urlConnection.connect();
         InputStream inputStream = urlConnection.getInputStream();
         byte[] bytes = new byte[1024];
@@ -93,11 +94,11 @@ public class ECard extends XDUQueryModule {
         httpURLConnection.setDoOutput(true);
         httpURLConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
         String OUTPUT_DATA = "flag=1&code=";
-        OUTPUT_DATA+=username;
-        OUTPUT_DATA+="&pwd=";
-        OUTPUT_DATA+=password;
-        OUTPUT_DATA+="&cardCheckCode=";
-        OUTPUT_DATA+=captcha;
+        OUTPUT_DATA += username;
+        OUTPUT_DATA += "&pwd=";
+        OUTPUT_DATA += password;
+        OUTPUT_DATA += "&cardCheckCode=";
+        OUTPUT_DATA += captcha;
         httpURLConnection.connect();
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(httpURLConnection.getOutputStream(), "UTF-8");
         outputStreamWriter.write(OUTPUT_DATA);
@@ -116,7 +117,7 @@ public class ECard extends XDUQueryModule {
     public boolean checkIsLogin(String username) throws IOException {
         URL url = new URL(HOST + CARD_USER_INFO_SUFFIX);
         URLConnection urlConnection = url.openConnection();
-        urlConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
+        urlConnection.setRequestProperty("Cookie", "JSESSIONID=" + JSESSIONID);
         urlConnection.connect();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
         String BUFFER;
@@ -159,11 +160,11 @@ public class ECard extends XDUQueryModule {
         /*
          * 遍历所有结果页面
          */
-        for (int page=1; page<=maxPage; page++) {
+        for (int page = 1; page <= maxPage; page ++) {
             httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setRequestMethod("POST");
             httpURLConnection.setDoOutput(true);
-            httpURLConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
+            httpURLConnection.setRequestProperty("Cookie", "JSESSIONID=" + JSESSIONID);
             String OUTPUT_DATA = "page=";
             OUTPUT_DATA += page;
             OUTPUT_DATA += "&startTime=";
@@ -193,7 +194,7 @@ public class ECard extends XDUQueryModule {
             String temp;
             String htmlPage = "";
             while ((temp = bufferedReader.readLine()) != null)
-                htmlPage+=temp;
+                htmlPage += temp;
             httpURLConnection.getResponseMessage();
             Document document = Jsoup.parse(htmlPage);
             bufferedReader.close();
@@ -232,10 +233,10 @@ public class ECard extends XDUQueryModule {
          */
         if (stringArrayList.size() == 0)
             return null;
-        stringArrayList.set(stringArrayList.size()-1,
-                stringArrayList.get(stringArrayList.size()-1)
-                .substring(stringArrayList.get(stringArrayList.size()-1).indexOf("：")+1,
-                        stringArrayList.get(stringArrayList.size()-1).indexOf(" ")));
+        stringArrayList.set(stringArrayList.size() - 1,
+                stringArrayList.get(stringArrayList.size() - 1)
+                .substring(stringArrayList.get(stringArrayList.size() - 1).indexOf("：") + 1,
+                        stringArrayList.get(stringArrayList.size() - 1).indexOf(" ")));
 
         /*
          * 返回字符串数组(stringArrayList)说明:

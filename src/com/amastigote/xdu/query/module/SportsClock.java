@@ -23,7 +23,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import com.amastigote.xdu.query.util.XDUQueryModule;
+import com.amastigote.xdu.query.util.XDUQueryBase;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -31,7 +31,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-public class SportsClock extends XDUQueryModule {
+public class SportsClock implements XDUQueryBase {
     private final static String HOST = "http://210.27.8.14";
     private final static String LOGIN_SUFFIX = "/login";
     private final static String RUNNER_SUFFIX = "/runner/";
@@ -98,7 +98,7 @@ public class SportsClock extends XDUQueryModule {
     public ArrayList<String> query(String... params) throws IOException {
         URL url = new URL(HOST+ACHIEVEMENTS_SUFFIX);
         URLConnection urlConnection = url.openConnection();
-        urlConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
+        urlConnection.setRequestProperty("Cookie", "JSESSIONID=" + JSESSIONID);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
         String temp;
         String htmlPage = "";
