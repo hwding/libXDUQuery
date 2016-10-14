@@ -64,9 +64,12 @@ public class Test {
 
             WaterAndElectricity waterAndElectricity = new WaterAndElectricity();
             if (waterAndElectricity.login("2011022212","deleted_d")) {
-                ArrayList<String> stringArrayList_d = waterAndElectricity.query("metInfo");
+                ArrayList<String> stringArrayList_d = waterAndElectricity.query(WaterAndElectricity.METER);
+                ArrayList<String> stringArrayList_e = waterAndElectricity.query(WaterAndElectricity.PAY, WaterAndElectricity.ONE_MONTH);
                 System.out.println(stringArrayList_d.size());
                 System.out.println(stringArrayList_d);
+                System.out.println(stringArrayList_e.size());
+                System.out.println(stringArrayList_e);
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -31,11 +31,12 @@ import java.io.OutputStreamWriter;
 import java.net.*;
 import java.util.ArrayList;
 
-public class PhysicalExperiment extends XDUQueryModule{
+public class PhysicalExperiment extends XDUQueryModule {
     private final static String HOST = "http://wlsy.xidian.edu.cn/phyEws";
     private final static String SELECTED_EXPERIMENT_SUFFIX = "/student/select.aspx";
     private final static String STUDENT_SUFFIX = "/student/student.aspx";
     private final static String LOGIN_SUFFIX = "/default.aspx";
+
     private String PhyEwsAuth = "";
     private String ID = "";
 
@@ -116,7 +117,9 @@ public class PhysicalExperiment extends XDUQueryModule{
     }
 
     /*
-     * 通过页面是否存在学生信息判断是否登陆成功
+     * 通过比对用户信息页面返回结果与登录时的学号判断是否登录成功(首次登录时自动调用)
+     * 可用于检测当前SESSION(会话)是否因为已超时而需要重新登录
+     * 传入参数为登录时的学号(卡号)
      */
     public boolean checkIsLogin(String username) throws IOException {
         Document document = getPage(STUDENT_SUFFIX);

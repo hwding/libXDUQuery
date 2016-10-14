@@ -43,15 +43,9 @@ public class WaterAndElectricity extends XDUQueryModule {
     private final static String PAYINFO_SUFFIX = "/SearchWap/webFrm/pay.aspx";
     private final static String METINFO_SUFFIX = "/SearchWap/webFrm/met.aspx";
 
-    /*
-        todo: make query param public final static String constant
-     */
-
     private static String VIEWSTATE = "";
-
     private String ID = "";
     private String ASP_dot_NET_SessionId = "";
-    
 
     private void preLogin() throws IOException {
         URL url = new URL(HOST+PRE_LOGIN_SUFFIX);
@@ -94,19 +88,38 @@ public class WaterAndElectricity extends XDUQueryModule {
         return checkIsLogin(username);
     }
 
+    /*
+        static fields for query kind
+     */
+    public static final String PAY = "payInfo";
+    public static final String USE = "useInfo";
+    public static final String METER = "metInfo";
+
+    /*
+     * 查询方法须传入 [ 查询类型 | (查询参数) ] 作为参数
+     * 缴费查询和用量查询需要提供时长参数，表具查询不需要额外参数
+     *
+     * 注意: 此处传入的参数请使用类静态字段，否则将抛出非法参数异常
+     */
     public ArrayList<String> query(String... params) throws IOException {
-        if (params.length != 1)
+        if (params.length != 1 && params.length != 2)
             throw new IllegalArgumentException("Bad parameter, check document for help");
         String type = params[0];
         ArrayList<String> stringArrayList;
         switch (type) {
-            case "payInfo":
-                stringArrayList = query_payInfo();
+            case PAY:
+                if (params.length != 2)
+                    throw new IllegalArgumentException("Bad parameter, check document for help");
+                stringArrayList = query_payInfo(params[1]);
                 break;
-            case "useInfo":
-                stringArrayList = query_useInfo();
+            case USE:
+                if (params.length != 2)
+                    throw new IllegalArgumentException("Bad parameter, check document for help");
+                stringArrayList = query_useInfo(params[1]);
                 break;
-            case "metInfo":
+            case METER:
+                if (params.length != 1)
+                    throw new IllegalArgumentException("Bad parameter, check document for help");
                 stringArrayList = query_metInfo();
                 break;
             default:
@@ -116,10 +129,25 @@ public class WaterAndElectricity extends XDUQueryModule {
         return stringArrayList;
     }
 
-    private ArrayList<String> query_payInfo() throws IOException {
+    /*
+        static fields for query duration
+     */
+    public static final String ONE_MONTH = "近一个月";
+    public static final String THREE_MONTH = "近三个月";
+
+    private ArrayList<String> query_payInfo(String duration) throws IOException {
         getPageAttributes(PAYINFO_SUFFIX);
         String OUTPUT_DATA = "But_Seach3=";
-        OUTPUT_DATA += "近三个月";
+        switch (duration) {
+            case ONE_MONTH:
+                OUTPUT_DATA += ONE_MONTH;
+                break;
+            case THREE_MONTH:
+                OUTPUT_DATA += THREE_MONTH;
+                break;
+            default:
+                throw new IllegalArgumentException("Bad parameter, check document for help");
+        }
         OUTPUT_DATA += "&__VIEWSTATE=";
         OUTPUT_DATA += VIEWSTATE;
         OUTPUT_DATA += "&HiddenField_webName=";
@@ -158,10 +186,19 @@ public class WaterAndElectricity extends XDUQueryModule {
     }
 
 
-    private ArrayList<String> query_useInfo() throws IOException {
+    private ArrayList<String> query_useInfo(String duration) throws IOException {
         getPageAttributes(USEINFO_SUFFIX);
         String OUTPUT_DATA = "But_Seach3=";
-        OUTPUT_DATA += "近三个月";
+        switch (duration) {
+            case ONE_MONTH:
+                OUTPUT_DATA += ONE_MONTH;
+                break;
+            case THREE_MONTH:
+                OUTPUT_DATA += THREE_MONTH;
+                break;
+            default:
+                throw new IllegalArgumentException("Bad parameter, check document for help");
+        }
         OUTPUT_DATA += "&__VIEWSTATE=";
         OUTPUT_DATA += VIEWSTATE;
         OUTPUT_DATA += "&HiddenField_webName=";
@@ -265,6 +302,11 @@ public class WaterAndElectricity extends XDUQueryModule {
         return Jsoup.parse(htmlPage);
     }
 
+    /*
+     * 通过比对用户信息页面返回结果与登录时的学号判断是否登录成功(首次登录时自动调用)
+     * 可用于检测当前SESSION(会话)是否因为已超时而需要重新登录
+     * 传入参数为登录时的学号(卡号)
+     */
     public boolean checkIsLogin(String username) throws IOException {
         Document document = getPage("", USEINFO_SUFFIX);
         if (document.toString().contains(username)) {
@@ -277,6 +319,11 @@ public class WaterAndElectricity extends XDUQueryModule {
         }
     }
 
+    /**
+     * 用于返回当前会话的卡号(学号)
+     *
+     * 注意: 当且仅当checkIsLogin()方法被调用且确认已登录成功(checkIsLogin()返回true)时, 其返回为当前会话的卡号(学号), 否则返回空内容
+     */
     public String getID() {
         return ID;
     }

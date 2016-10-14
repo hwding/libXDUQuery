@@ -31,13 +31,14 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-public class ECard extends XDUQueryModule{
+public class ECard extends XDUQueryModule {
     private final static String HOST = "http://ecard.xidian.edu.cn";
     private final static String PRE_LOGIN_SUFFIX = "/login.jsp";
     private final static String CARD_USER_INFO_SUFFIX = "/cardUserManager.do?method=searchCardUserInfo";
     private final static String LOGIN_SUFFIX = "/cardUserManager.do?method=checkLogin";
     private final static String CAPTCHA_SUFFIX = "/authImage";
     private final static String TRANSFER_INFO_SUFFIX = "/cardUserManager.do?method=searchTrjnInfos";
+
     private String JSESSIONID = "";
     private String ID = "";
 

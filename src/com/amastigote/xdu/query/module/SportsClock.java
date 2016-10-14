@@ -31,11 +31,12 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-public class SportsClock extends XDUQueryModule{
+public class SportsClock extends XDUQueryModule {
     private final static String HOST = "http://210.27.8.14";
     private final static String LOGIN_SUFFIX = "/login";
     private final static String RUNNER_SUFFIX = "/runner/";
     private final static String ACHIEVEMENTS_SUFFIX = "/runner/achievements.html";
+
     private String JSESSIONID = "";
     private String ID = "";
 
@@ -73,7 +74,9 @@ public class SportsClock extends XDUQueryModule{
     }
 
     /*
-     * 通过直接请求内部页面并检查返回值判断是否登录成功(首次登录时自动调用)
+     * 通过比对用户信息页面返回结果与登录时的学号判断是否登录成功(首次登录时自动调用)
+     * 可用于检测当前SESSION(会话)是否因为已超时而需要重新登录
+     * 传入参数为登录时的学号(卡号)
      */
     public boolean checkIsLogin(String username) throws IOException {
         URL url = new URL(HOST+RUNNER_SUFFIX);
