@@ -31,7 +31,7 @@ import java.io.OutputStreamWriter;
 import java.net.*;
 import java.util.ArrayList;
 
-public class PhysicalExperiment implements XDUQueryBase {
+public class PhysicsExperiment implements XDUQueryBase {
     private final static String HOST = "http://wlsy.xidian.edu.cn/phyEws";
     private final static String SELECTED_EXPERIMENT_SUFFIX = "/student/select.aspx";
     private final static String STUDENT_SUFFIX = "/student/student.aspx";

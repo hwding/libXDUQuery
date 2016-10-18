@@ -20,7 +20,7 @@
 package com.amastigote.xdu.query.test;
 
 import com.amastigote.xdu.query.module.ECard;
-import com.amastigote.xdu.query.module.PhysicalExperiment;
+import com.amastigote.xdu.query.module.PhysicsExperiment;
 import com.amastigote.xdu.query.module.SportsClock;
 import com.amastigote.xdu.query.module.WaterAndElectricity;
 import java.io.File;
@@ -31,13 +31,13 @@ import java.util.Scanner;
 public class Test {
     public static void main(String[] args) {
         try {
-            PhysicalExperiment physicalExperiment = new PhysicalExperiment();
-            System.out.println(physicalExperiment.checkIsLogin("15130188016"));
-            if (physicalExperiment.login("15130188016", "deleted_a")) {
-                ArrayList<String> stringArrayList_a = physicalExperiment.query();
+            PhysicsExperiment physicsExperiment = new PhysicsExperiment();
+            System.out.println(physicsExperiment.checkIsLogin("15130188016"));
+            if (physicsExperiment.login("15130188016", "deleted_a")) {
+                ArrayList<String> stringArrayList_a = physicsExperiment.query();
                 System.out.println(stringArrayList_a.size());
                 System.out.println(stringArrayList_a);
-                System.out.println(physicalExperiment.getID());
+                System.out.println(physicsExperiment.getID());
             }
 
             SportsClock sportsClock = new SportsClock();

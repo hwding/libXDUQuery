@@ -4,7 +4,7 @@
 ### 已支持 ❤
 - **校园一卡通(ECard)**  
 - **体育打卡(SportsClock)**
-- **物理实验(PhysicalExperiment)**
+- **物理实验(PhysicsExperiment)**
 - **水电(WaterAndElectricity)**
 
 ### 待支持 🖤
