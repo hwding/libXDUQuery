@@ -5,10 +5,10 @@
 - **校园一卡通(ECard)**  
 - **体育打卡(SportsClock)**
 - **物理实验(PhysicalExperiment)**
-- **能源信息查询系统(WaterAndElectricity)**
+- **水电(WaterAndElectricity)**
 
 ### 待支持 🖤
-- 图书馆查询系统
+- 图书馆
 
 ### 接口文档 🍕
 - API documentation is temporarily unavailable
