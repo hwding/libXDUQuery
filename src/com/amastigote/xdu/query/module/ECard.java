@@ -19,20 +19,20 @@
 
 package com.amastigote.xdu.query.module;
 
-import com.amastigote.xdu.query.util.XDUQueryCaptcha;
+import com.amastigote.xdu.query.util.IXDUQueryCaptcha;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.StringUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import com.amastigote.xdu.query.util.XDUQueryBase;
+import com.amastigote.xdu.query.util.IXDUQueryBase;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-public class ECard implements XDUQueryBase, XDUQueryCaptcha {
+public class ECard implements IXDUQueryBase, IXDUQueryCaptcha {
     private final static String HOST = "http://ecard.xidian.edu.cn";
     private final static String PRE_LOGIN_SUFFIX = "/login.jsp";
     private final static String CARD_USER_INFO_SUFFIX = "/cardUserManager.do?method=searchCardUserInfo";

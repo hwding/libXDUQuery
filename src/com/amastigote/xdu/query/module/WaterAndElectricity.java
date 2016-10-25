@@ -19,7 +19,7 @@
 
 package com.amastigote.xdu.query.module;
 
-import com.amastigote.xdu.query.util.XDUQueryBase;
+import com.amastigote.xdu.query.util.IXDUQueryBase;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -35,7 +35,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-public class WaterAndElectricity implements XDUQueryBase {
+public class WaterAndElectricity implements IXDUQueryBase {
     private final static String HOST = "http://10.168.55.50:8088";
     private final static String PRE_LOGIN_SUFFIX = "/searchWap/Login.aspx";
     private final static String LOGIN_SUFFIX = "/ajaxpro/SearchWap_Login,App_Web_fghipt60.ashx";

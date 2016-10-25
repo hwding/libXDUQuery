@@ -22,6 +22,6 @@ package com.amastigote.xdu.query.util;
 import java.io.File;
 import java.io.IOException;
 
-public interface XDUQueryCaptcha {
+public interface IXDUQueryCaptcha {
     void getCaptcha(File file) throws IOException;
 }

@@ -23,7 +23,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import com.amastigote.xdu.query.util.XDUQueryBase;
+import com.amastigote.xdu.query.util.IXDUQueryBase;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -31,7 +31,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-public class SportsClock implements XDUQueryBase {
+public class SportsClock implements IXDUQueryBase {
     private final static String HOST = "http://210.27.8.14";
     private final static String LOGIN_SUFFIX = "/login";
     private final static String RUNNER_SUFFIX = "/runner/";

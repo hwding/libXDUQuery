@@ -23,7 +23,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import com.amastigote.xdu.query.util.XDUQueryBase;
+import com.amastigote.xdu.query.util.IXDUQueryBase;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,7 +31,7 @@ import java.io.OutputStreamWriter;
 import java.net.*;
 import java.util.ArrayList;
 
-public class PhysicsExperiment implements XDUQueryBase {
+public class PhysicsExperiment implements IXDUQueryBase {
     private final static String HOST = "http://wlsy.xidian.edu.cn/phyEws";
     private final static String SELECTED_EXPERIMENT_SUFFIX = "/student/select.aspx";
     private final static String STUDENT_SUFFIX = "/student/student.aspx";

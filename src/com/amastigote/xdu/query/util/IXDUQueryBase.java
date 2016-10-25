@@ -22,7 +22,7 @@ package com.amastigote.xdu.query.util;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public interface XDUQueryBase {
+public interface IXDUQueryBase {
     boolean login(String... params) throws IOException;
     ArrayList<String> query(String... params) throws IOException;
     boolean checkIsLogin(String username) throws IOException;
