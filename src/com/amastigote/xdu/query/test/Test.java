@@ -19,13 +19,15 @@
 
 package com.amastigote.xdu.query.test;
 
+import com.amastigote.xdu.query.conf.Duration;
+import com.amastigote.xdu.query.conf.Type;
 import com.amastigote.xdu.query.module.ECard;
 import com.amastigote.xdu.query.module.PhysicsExperiment;
 import com.amastigote.xdu.query.module.SportsClock;
 import com.amastigote.xdu.query.module.WaterAndElectricity;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Test {
@@ -34,7 +36,7 @@ public class Test {
             PhysicsExperiment physicsExperiment = new PhysicsExperiment();
             System.out.println(physicsExperiment.checkIsLogin("15130188016"));
             if (physicsExperiment.login("15130188016", "deleted_a")) {
-                ArrayList<String> stringArrayList_a = physicsExperiment.query();
+                List<String> stringArrayList_a = physicsExperiment.query();
                 System.out.println(stringArrayList_a.size());
                 System.out.println(stringArrayList_a);
                 System.out.println(physicsExperiment.getID());
@@ -42,7 +44,7 @@ public class Test {
 
             SportsClock sportsClock = new SportsClock();
             if (sportsClock.login("15130188016", "deleted_b")) {
-                ArrayList<String> stringArrayList_b = sportsClock.query();
+                List<String> stringArrayList_b = sportsClock.query();
                 System.out.println(stringArrayList_b.size());
                 System.out.println(stringArrayList_b);
                 System.out.println(sportsClock.getID());
@@ -55,7 +57,7 @@ public class Test {
             Scanner scanner = new Scanner(System.in);
             String captcha = scanner.nextLine();
             if (eCard.login("15130188016", "deleted_c", captcha)) {
-                ArrayList<String> stringArrayList_c = eCard.query("2016-09-10", "2016-10-06");
+                List<String> stringArrayList_c = eCard.query("2016-09-10", "2016-10-06");
                 System.out.println(stringArrayList_c.size());
                 System.out.println(stringArrayList_c);
             }
@@ -64,8 +66,8 @@ public class Test {
 
             WaterAndElectricity waterAndElectricity = new WaterAndElectricity();
             if (waterAndElectricity.login("2011022212","deleted_d")) {
-                ArrayList<String> stringArrayList_d = waterAndElectricity.query(WaterAndElectricity.METER);
-                ArrayList<String> stringArrayList_e = waterAndElectricity.query(WaterAndElectricity.PAY, WaterAndElectricity.ONE_MONTH);
+                List<String> stringArrayList_d = waterAndElectricity.query(Type.METER, null);
+                List<String> stringArrayList_e = waterAndElectricity.query(Type.PAY, Duration.ONE_MONTH);
                 System.out.println(stringArrayList_d.size());
                 System.out.println(stringArrayList_d);
                 System.out.println(stringArrayList_e.size());

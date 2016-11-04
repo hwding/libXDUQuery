@@ -19,19 +19,27 @@
 
 package com.amastigote.xdu.query.module;
 
+import com.amastigote.xdu.query.util.IXDULoginNormal;
+import com.amastigote.xdu.query.util.IXDUQueryNoParam;
+import com.sun.istack.internal.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import com.amastigote.xdu.query.util.IXDUQueryBase;
+import com.amastigote.xdu.query.util.IXDUBase;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.List;
 
-public class SportsClock implements IXDUQueryBase {
+public class SportsClock
+        implements
+            IXDUBase,
+            IXDUQueryNoParam,
+            IXDULoginNormal {
     private final static String HOST = "http://210.27.8.14";
     private final static String LOGIN_SUFFIX = "/login";
     private final static String RUNNER_SUFFIX = "/runner/";
@@ -44,12 +52,7 @@ public class SportsClock implements IXDUQueryBase {
      * 登录方法须传入 [ 学号 | 密码 ] 作为参数
      * 返回是否登录成功
      */
-    public boolean login (String... params) throws IOException {
-        if (params.length != 2)
-            throw new IllegalArgumentException("Bad parameter, check document for help");
-
-        String password = params[0];
-        String username = params[1];
+    public boolean login (@NotNull String username, @NotNull String password) throws IOException {
 
         URL url = new URL(HOST+LOGIN_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -78,7 +81,7 @@ public class SportsClock implements IXDUQueryBase {
      * 可用于检测当前SESSION(会话)是否因为已超时而需要重新登录
      * 传入参数为登录时的学号(卡号)
      */
-    public boolean checkIsLogin(String username) throws IOException {
+    public boolean checkIsLogin(@NotNull String username) throws IOException {
         URL url = new URL(HOST+RUNNER_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setInstanceFollowRedirects(false);
@@ -95,7 +98,7 @@ public class SportsClock implements IXDUQueryBase {
         return false;
     }
 
-    public ArrayList<String> query(String... params) throws IOException {
+    public List<String> query() throws IOException {
         URL url = new URL(HOST+ACHIEVEMENTS_SUFFIX);
         URLConnection urlConnection = url.openConnection();
         urlConnection.setRequestProperty("Cookie", "JSESSIONID=" + JSESSIONID);
@@ -119,7 +122,7 @@ public class SportsClock implements IXDUQueryBase {
          *
          *      - 注意: 如果结果中没有记录将返回空数组而非null!
          */
-        ArrayList<String> stringArrayList = new ArrayList<>();
+        List<String> stringArrayList = new ArrayList<>();
 
         for (Element td : tds) {
             if (!"".equals(td.text()))

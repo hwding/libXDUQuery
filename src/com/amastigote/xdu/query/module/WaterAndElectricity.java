@@ -19,7 +19,13 @@
 
 package com.amastigote.xdu.query.module;
 
-import com.amastigote.xdu.query.util.IXDUQueryBase;
+import com.amastigote.xdu.query.conf.Duration;
+import com.amastigote.xdu.query.conf.Type;
+import com.amastigote.xdu.query.util.IXDUBase;
+import com.amastigote.xdu.query.util.IXDULoginNormal;
+import com.amastigote.xdu.query.util.IXDUQueryTypeAndDurationParam;
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -34,8 +40,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.List;
 
-public class WaterAndElectricity implements IXDUQueryBase {
+public class WaterAndElectricity
+        implements
+            IXDUBase,
+            IXDUQueryTypeAndDurationParam,
+            IXDULoginNormal {
     private final static String HOST = "http://10.168.55.50:8088";
     private final static String PRE_LOGIN_SUFFIX = "/searchWap/Login.aspx";
     private final static String LOGIN_SUFFIX = "/ajaxpro/SearchWap_Login,App_Web_fghipt60.ashx";
@@ -59,13 +70,9 @@ public class WaterAndElectricity implements IXDUQueryBase {
     }
 
 
-    public boolean login(String... params) throws IOException {
-        if (params.length != 2)
-            throw new IllegalArgumentException("Bad parameter, check document for help");
-        preLogin();
+    public boolean login(@NotNull String username, @NotNull String password) throws IOException {
 
-        String username = params[0];
-        String password = params[1];
+        preLogin();
 
         URL url = new URL(HOST+LOGIN_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -89,39 +96,27 @@ public class WaterAndElectricity implements IXDUQueryBase {
     }
 
     /*
-        static fields for query kind
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final String PAY = "payInfo";
-    @SuppressWarnings("WeakerAccess")
-    public static final String USE = "useInfo";
-    @SuppressWarnings("WeakerAccess")
-    public static final String METER = "metInfo";
-
-    /*
-     * 查询方法须传入 [ 查询类型 | (查询参数) ] 作为参数
-     * 缴费查询和用量查询需要提供时长参数，表具查询不需要额外参数
+     * 查询方法须传入 [ 查询类型 | 查询参数 ] 作为参数
+     * 缴费查询和用量查询需要提供时长参数
+     * 表具查询不需要额外参数, 务必将参数位设置为 null
      *
-     * 注意: 此处传入的参数请使用类静态字段，否则将抛出非法参数异常
+     * 注意: 此处传入的参数请使用枚举类型 Type 与 Duration
      */
-    public ArrayList<String> query(String... params) throws IOException {
-        if (params.length != 1 && params.length != 2)
-            throw new IllegalArgumentException("Bad parameter, check document for help");
-        String type = params[0];
-        ArrayList<String> stringArrayList;
+    public List<String> query(@NotNull Type type, @Nullable Duration duration) throws IOException {
+        List<String> stringArrayList;
         switch (type) {
             case PAY:
-                if (params.length != 2)
+                if (duration == null)
                     throw new IllegalArgumentException("Bad parameter, check document for help");
-                stringArrayList = query_payInfo(params[1]);
+                stringArrayList = query_payInfo(duration);
                 break;
             case USE:
-                if (params.length != 2)
+                if (duration == null)
                     throw new IllegalArgumentException("Bad parameter, check document for help");
-                stringArrayList = query_useInfo(params[1]);
+                stringArrayList = query_useInfo(duration);
                 break;
             case METER:
-                if (params.length != 1)
+                if (duration != null)
                     throw new IllegalArgumentException("Bad parameter, check document for help");
                 stringArrayList = query_metInfo();
                 break;
@@ -132,15 +127,10 @@ public class WaterAndElectricity implements IXDUQueryBase {
         return stringArrayList;
     }
 
-    /*
-        static fields for query duration
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final String ONE_MONTH = "近一个月";
-    @SuppressWarnings("WeakerAccess")
-    public static final String THREE_MONTH = "近三个月";
+    private static final String ONE_MONTH = "近一个月";
+    private static final String THREE_MONTH = "近三个月";
 
-    private ArrayList<String> query_payInfo(String duration) throws IOException {
+    private List<String> query_payInfo(Duration duration) throws IOException {
         getPageAttributes(PAYINFO_SUFFIX);
         String OUTPUT_DATA = "But_Seach3=";
         switch (duration) {
@@ -162,7 +152,7 @@ public class WaterAndElectricity implements IXDUQueryBase {
         Document document = getPage(OUTPUT_DATA, PAYINFO_SUFFIX);
         Elements elements = document.select("td");
 
-        ArrayList<String> stringArrayList = new ArrayList<>();
+        List<String> stringArrayList = new ArrayList<>();
 
         for (Element td : elements) {
             String tmp = td.text();
@@ -191,7 +181,7 @@ public class WaterAndElectricity implements IXDUQueryBase {
     }
 
 
-    private ArrayList<String> query_useInfo(String duration) throws IOException {
+    private List<String> query_useInfo(Duration duration) throws IOException {
         getPageAttributes(USEINFO_SUFFIX);
         String OUTPUT_DATA = "But_Seach3=";
         switch (duration) {
@@ -213,7 +203,7 @@ public class WaterAndElectricity implements IXDUQueryBase {
         Document document = getPage(OUTPUT_DATA,USEINFO_SUFFIX);
         Elements elements = document.select("td");
 
-        ArrayList<String> stringArrayList = new ArrayList<>();
+        List<String> stringArrayList = new ArrayList<>();
 
         for (Element td : elements) {
             String tmp = td.text();
@@ -243,11 +233,11 @@ public class WaterAndElectricity implements IXDUQueryBase {
         return stringArrayList;
     }
 
-    private ArrayList<String> query_metInfo() throws IOException {
+    private List<String> query_metInfo() throws IOException {
         Document document = getPage("", METINFO_SUFFIX);
         Elements elements = document.select("td");
 
-        ArrayList<String> stringArrayList = new ArrayList<>();
+        List<String> stringArrayList = new ArrayList<>();
 
         for (Element td : elements) {
             String tmp = td.text();
@@ -312,7 +302,7 @@ public class WaterAndElectricity implements IXDUQueryBase {
      * 可用于检测当前SESSION(会话)是否因为已超时而需要重新登录
      * 传入参数为登录时的学号(卡号)
      */
-    public boolean checkIsLogin(String username) throws IOException {
+    public boolean checkIsLogin(@NotNull String username) throws IOException {
         Document document = getPage("", USEINFO_SUFFIX);
         if (document.toString().contains(username)) {
             ID = username;

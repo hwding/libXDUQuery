@@ -19,19 +19,27 @@
 
 package com.amastigote.xdu.query.module;
 
+import com.amastigote.xdu.query.util.IXDULoginNormal;
+import com.amastigote.xdu.query.util.IXDUQueryNoParam;
+import com.sun.istack.internal.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import com.amastigote.xdu.query.util.IXDUQueryBase;
+import com.amastigote.xdu.query.util.IXDUBase;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.List;
 
-public class PhysicsExperiment implements IXDUQueryBase {
+public class PhysicsExperiment
+        implements
+            IXDUBase,
+            IXDUQueryNoParam,
+            IXDULoginNormal {
     private final static String HOST = "http://wlsy.xidian.edu.cn/phyEws";
     private final static String SELECTED_EXPERIMENT_SUFFIX = "/student/select.aspx";
     private final static String STUDENT_SUFFIX = "/student/student.aspx";
@@ -54,7 +62,7 @@ public class PhysicsExperiment implements IXDUQueryBase {
 
     }
 
-    private static ArrayList<String> getPageAttributes(String htmlPage){
+    private static List<String> getPageAttributes(String htmlPage){
         Document document = Jsoup.parse(htmlPage);
         Elements elements_VIEWSTATEGENERATOR = document
                 .select("input[type=\"hidden\"][name=\"__VIEWSTATEGENERATOR\"]");
@@ -62,7 +70,7 @@ public class PhysicsExperiment implements IXDUQueryBase {
                 .select("input[type=\"hidden\"][name=\"__VIEWSTATE\"]");
         Elements elements_EVENTVALIDATION = document
                 .select("input[type=\"hidden\"][name=\"__EVENTVALIDATION\"]");
-        ArrayList<String> stringArrayList = new ArrayList<>();
+        List<String> stringArrayList = new ArrayList<>();
         stringArrayList.add(elements_VIEWSTATE.get(0).attr("value"));
         stringArrayList.add(elements_VIEWSTATEGENERATOR.get(0).attr("value"));
         stringArrayList.add(elements_EVENTVALIDATION.get(0).attr("value"));
@@ -75,14 +83,9 @@ public class PhysicsExperiment implements IXDUQueryBase {
      *
      * @return 是否登录成功
      */
-    public boolean login(String... params) throws IOException {
-        if (params.length != 2)
-            throw new IllegalArgumentException("Bad parameter, check document for help");
+    public boolean login(@NotNull String username, @NotNull String password) throws IOException {
 
-        String username = params[0];
-        String password = params[1];
-
-        ArrayList<String> pageAttributes = getPageAttributes(preLogin());
+        List<String> pageAttributes = getPageAttributes(preLogin());
         URL url = new URL(HOST + LOGIN_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setDoOutput(true);
@@ -121,7 +124,7 @@ public class PhysicsExperiment implements IXDUQueryBase {
      * 可用于检测当前SESSION(会话)是否因为已超时而需要重新登录
      * 传入参数为登录时的学号(卡号)
      */
-    public boolean checkIsLogin(String username) throws IOException {
+    public boolean checkIsLogin(@NotNull String username) throws IOException {
         Document document = getPage(STUDENT_SUFFIX);
         Elements elements = document.select("span[id=\"Stu\"]");
 
@@ -149,9 +152,9 @@ public class PhysicsExperiment implements IXDUQueryBase {
         return Jsoup.parse(htmlPage);
     }
 
-    public ArrayList<String> query(String... params) throws IOException {
+    public List<String> query() throws IOException {
         Document document = getPage(SELECTED_EXPERIMENT_SUFFIX);
-        ArrayList<String> stringArrayList = new ArrayList<>();
+        List<String> stringArrayList = new ArrayList<>();
         Elements elements = document.select("td[class=\"forumRow\"]");
         for (Element element : elements) stringArrayList.add(element.text());
 

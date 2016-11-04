@@ -19,20 +19,30 @@
 
 package com.amastigote.xdu.query.module;
 
-import com.amastigote.xdu.query.util.IXDUQueryCaptcha;
+import com.amastigote.xdu.query.util.IXDUCaptcha;
+import com.amastigote.xdu.query.util.IXDULoginCaptcha;
+import com.amastigote.xdu.query.util.IXDUQueryDateDurationParam;
+import com.sun.istack.internal.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.StringUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import com.amastigote.xdu.query.util.IXDUQueryBase;
+import com.amastigote.xdu.query.util.IXDUBase;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.List;
 
-public class ECard implements IXDUQueryBase, IXDUQueryCaptcha {
+public class ECard
+        implements
+            IXDUBase,
+            IXDUCaptcha,
+            IXDUQueryDateDurationParam,
+            IXDULoginCaptcha {
+
     private final static String HOST = "http://ecard.xidian.edu.cn";
     private final static String PRE_LOGIN_SUFFIX = "/login.jsp";
     private final static String CARD_USER_INFO_SUFFIX = "/cardUserManager.do?method=searchCardUserInfo";
@@ -60,7 +70,7 @@ public class ECard implements IXDUQueryBase, IXDUQueryCaptcha {
      * 验证码将会写入目标文件, 文件须为JPEG格式
      * 登录(或重新登录)前必须调用此方法以刷新此次SESSION(会话)的验证码
      */
-    public void getCaptcha(File file) throws IOException {
+    public void getCaptcha(@NotNull File file) throws IOException {
         URL url = new URL(HOST + CAPTCHA_SUFFIX);
         URLConnection urlConnection = url.openConnection();
         urlConnection.setRequestProperty("Cookie", "JSESSIONID=" + JSESSIONID);
@@ -80,19 +90,13 @@ public class ECard implements IXDUQueryBase, IXDUQueryCaptcha {
      * 登录方法须传入 [ 当前验证码 | 学号(卡号) | 一卡通密码 ] 作为参数
      * 返回是否登录成功
      */
-    public boolean login(String... params) throws IOException {
-        if (params.length != 3)
-            throw new IllegalArgumentException("Bad parameter, check document for help");
-
-        String username = params[0];
-        String password = params[1];
-        String captcha = params[2];
+    public boolean login(@NotNull String username, @NotNull String password, @NotNull String captcha) throws IOException {
 
         URL url = new URL(HOST + LOGIN_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setRequestMethod("POST");
         httpURLConnection.setDoOutput(true);
-        httpURLConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
+        httpURLConnection.setRequestProperty("Cookie", "JSESSIONID=" + JSESSIONID);
         String OUTPUT_DATA = "flag=1&code=";
         OUTPUT_DATA += username;
         OUTPUT_DATA += "&pwd=";
@@ -114,7 +118,7 @@ public class ECard implements IXDUQueryBase, IXDUQueryCaptcha {
      * 可用于检测当前SESSION(会话)是否因为已超时而需要重新登录
      * 传入参数为登录时的学号(卡号)
      */
-    public boolean checkIsLogin(String username) throws IOException {
+    public boolean checkIsLogin(@NotNull String username) throws IOException {
         URL url = new URL(HOST + CARD_USER_INFO_SUFFIX);
         URLConnection urlConnection = url.openConnection();
         urlConnection.setRequestProperty("Cookie", "JSESSIONID=" + JSESSIONID);
@@ -126,7 +130,7 @@ public class ECard implements IXDUQueryBase, IXDUQueryCaptcha {
             return false;
         }
         while ((BUFFER = bufferedReader.readLine()) != null){
-            if (BUFFER.contains(username.substring(0,7))) {
+            if (BUFFER.contains(username.substring(0, 7))) {
                 ID = username;
                 bufferedReader.close();
                 return true;
@@ -143,17 +147,12 @@ public class ECard implements IXDUQueryBase, IXDUQueryCaptcha {
      *
      * 注意: 起止日期区间不得超过一个月, 否则将返回垃圾结果
      */
-    public ArrayList<String> query(String... params) throws IOException {
-        if (params.length != 2)
-            throw new IllegalArgumentException("Bad parameter, check document for help");
-
-        String fromDate = params[0];
-        String toDate = params[1];
+    public List<String> query(@NotNull String fromDate, @NotNull String toDate) throws IOException {
 
         int maxPage = 1;
         boolean FLAG_GOT_MAX_PAGE = false;
         final char SPACE = 160;
-        ArrayList<String> stringArrayList = new ArrayList<>();
+        List<String> stringArrayList = new ArrayList<>();
         URL url = new URL(HOST + TRANSFER_INFO_SUFFIX);
         HttpURLConnection httpURLConnection = null;
 

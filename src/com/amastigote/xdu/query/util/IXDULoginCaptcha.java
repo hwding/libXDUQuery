@@ -19,12 +19,10 @@
 
 package com.amastigote.xdu.query.util;
 
-import java.io.IOException;
-import java.util.ArrayList;
+import com.sun.istack.internal.NotNull;
 
-public interface IXDUQueryBase {
-    boolean login(String... params) throws IOException;
-    ArrayList<String> query(String... params) throws IOException;
-    boolean checkIsLogin(String username) throws IOException;
-    String getID();
+import java.io.IOException;
+
+public interface IXDULoginCaptcha {
+    boolean login(@NotNull String username, @NotNull String password, @NotNull String captcha) throws IOException;
 }

@@ -19,9 +19,10 @@
 
 package com.amastigote.xdu.query.util;
 
-import java.io.File;
+import com.sun.istack.internal.NotNull;
+
 import java.io.IOException;
 
-public interface IXDUQueryCaptcha {
-    void getCaptcha(File file) throws IOException;
+public interface IXDULoginNormal {
+    boolean login(@NotNull String username, @NotNull String password) throws IOException;
 }
