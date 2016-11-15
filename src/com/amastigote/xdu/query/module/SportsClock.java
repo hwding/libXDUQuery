@@ -37,9 +37,9 @@ import java.util.List;
 
 public class SportsClock
         implements
-            IXDUBase,
-            IXDUQueryNoParam,
-            IXDULoginNormal {
+        IXDUBase,
+        IXDUQueryNoParam,
+        IXDULoginNormal {
     private final static String HOST = "http://210.27.8.14";
     private final static String LOGIN_SUFFIX = "/login";
     private final static String RUNNER_SUFFIX = "/runner/";
@@ -52,9 +52,9 @@ public class SportsClock
      * 登录方法须传入 [ 学号 | 密码 ] 作为参数
      * 返回是否登录成功
      */
-    public boolean login (@NotNull String username, @NotNull String password) throws IOException {
+    public boolean login(@NotNull String username, @NotNull String password) throws IOException {
 
-        URL url = new URL(HOST+LOGIN_SUFFIX);
+        URL url = new URL(HOST + LOGIN_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setDoOutput(true);
         httpURLConnection.setRequestMethod("POST");
@@ -71,7 +71,7 @@ public class SportsClock
         outputStreamWriter.close();
         httpURLConnection.getResponseMessage();
         JSESSIONID = httpURLConnection.getHeaderField("Set-Cookie");
-        JSESSIONID = JSESSIONID.substring(JSESSIONID.indexOf("=")+1, JSESSIONID.indexOf(";"));
+        JSESSIONID = JSESSIONID.substring(JSESSIONID.indexOf("=") + 1, JSESSIONID.indexOf(";"));
         httpURLConnection.disconnect();
         return checkIsLogin(username);
     }
@@ -82,12 +82,12 @@ public class SportsClock
      * 传入参数为登录时的学号(卡号)
      */
     public boolean checkIsLogin(@NotNull String username) throws IOException {
-        URL url = new URL(HOST+RUNNER_SUFFIX);
+        URL url = new URL(HOST + RUNNER_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setInstanceFollowRedirects(false);
-        httpURLConnection.setRequestProperty("Cookie", "JSESSIONID="+JSESSIONID);
+        httpURLConnection.setRequestProperty("Cookie", "JSESSIONID=" + JSESSIONID);
         httpURLConnection.connect();
-        if ("OK".equals(httpURLConnection.getResponseMessage())){
+        if ("OK".equals(httpURLConnection.getResponseMessage())) {
             ID = username;
             httpURLConnection.disconnect();
             return true;
@@ -99,7 +99,7 @@ public class SportsClock
     }
 
     public List<String> query() throws IOException {
-        URL url = new URL(HOST+ACHIEVEMENTS_SUFFIX);
+        URL url = new URL(HOST + ACHIEVEMENTS_SUFFIX);
         URLConnection urlConnection = url.openConnection();
         urlConnection.setRequestProperty("Cookie", "JSESSIONID=" + JSESSIONID);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -136,7 +136,7 @@ public class SportsClock
      *
      * 注意: 当且仅当checkIsLogin()方法被调用且确认已登录成功(checkIsLogin()返回true)时, 其返回为当前会话的学号, 否则返回空内容
      */
-    public String getID(){
+    public String getID() {
         return ID;
     }
 }

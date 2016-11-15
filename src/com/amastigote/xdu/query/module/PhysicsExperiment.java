@@ -27,6 +27,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import com.amastigote.xdu.query.util.IXDUBase;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -37,9 +38,9 @@ import java.util.List;
 
 public class PhysicsExperiment
         implements
-            IXDUBase,
-            IXDUQueryNoParam,
-            IXDULoginNormal {
+        IXDUBase,
+        IXDUQueryNoParam,
+        IXDULoginNormal {
     private final static String HOST = "http://wlsy.xidian.edu.cn/phyEws";
     private final static String SELECTED_EXPERIMENT_SUFFIX = "/student/select.aspx";
     private final static String STUDENT_SUFFIX = "/student/student.aspx";
@@ -53,7 +54,7 @@ public class PhysicsExperiment
         URLConnection urlConnection = url.openConnection();
         urlConnection.connect();
         BufferedReader bufferedReader = new BufferedReader(
-                                        new InputStreamReader(urlConnection.getInputStream()));
+                new InputStreamReader(urlConnection.getInputStream()));
         String temp;
         String htmlPage = "";
         while ((temp = bufferedReader.readLine()) != null)
@@ -62,7 +63,7 @@ public class PhysicsExperiment
 
     }
 
-    private static List<String> getPageAttributes(String htmlPage){
+    private static List<String> getPageAttributes(String htmlPage) {
         Document document = Jsoup.parse(htmlPage);
         Elements elements_VIEWSTATEGENERATOR = document
                 .select("input[type=\"hidden\"][name=\"__VIEWSTATEGENERATOR\"]");
@@ -131,15 +132,14 @@ public class PhysicsExperiment
         if (elements.size() > 0) {
             ID = username;
             return true;
-        }
-        else {
+        } else {
             ID = "";
             return false;
         }
     }
 
-    private Document getPage(String suffix) throws IOException{
-        URL url = new URL(HOST+suffix);
+    private Document getPage(String suffix) throws IOException {
+        URL url = new URL(HOST + suffix);
         URLConnection urlConnection = url.openConnection();
         urlConnection.setRequestProperty("Cookie", "PhyEws_StuName=;PhyEws_StuType=1;.PhyEwsAuth=" + PhyEwsAuth);
         BufferedReader bufferedReader = new BufferedReader(
@@ -174,7 +174,7 @@ public class PhysicsExperiment
      *
      * 注意: 当且仅当登录成功时, 其返回为当前会话的学号, 否则返回空内容
      */
-    public String getID(){
+    public String getID() {
         return ID;
     }
 }

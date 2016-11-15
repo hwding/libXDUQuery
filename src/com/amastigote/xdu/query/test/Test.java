@@ -25,6 +25,7 @@ import com.amastigote.xdu.query.module.ECard;
 import com.amastigote.xdu.query.module.PhysicsExperiment;
 import com.amastigote.xdu.query.module.SportsClock;
 import com.amastigote.xdu.query.module.WaterAndElectricity;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -65,7 +66,7 @@ public class Test {
             System.out.println(tmp_bool);
 
             WaterAndElectricity waterAndElectricity = new WaterAndElectricity();
-            if (waterAndElectricity.login("2011022212","deleted_d")) {
+            if (waterAndElectricity.login("2011022212", "deleted_d")) {
                 List<String> stringArrayList_d = waterAndElectricity.query(Type.METER, null);
                 List<String> stringArrayList_e = waterAndElectricity.query(Type.PAY, Duration.ONE_MONTH);
                 System.out.println(stringArrayList_d.size());

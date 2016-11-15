@@ -44,9 +44,9 @@ import java.util.List;
 
 public class WaterAndElectricity
         implements
-            IXDUBase,
-            IXDUQueryTypeAndDurationParam,
-            IXDULoginNormal {
+        IXDUBase,
+        IXDUQueryTypeAndDurationParam,
+        IXDULoginNormal {
     private final static String HOST = "http://10.168.55.50:8088";
     private final static String PRE_LOGIN_SUFFIX = "/searchWap/Login.aspx";
     private final static String LOGIN_SUFFIX = "/ajaxpro/SearchWap_Login,App_Web_fghipt60.ashx";
@@ -59,7 +59,7 @@ public class WaterAndElectricity
     private String ASP_dot_NET_SessionId = "";
 
     private void preLogin() throws IOException {
-        URL url = new URL(HOST+PRE_LOGIN_SUFFIX);
+        URL url = new URL(HOST + PRE_LOGIN_SUFFIX);
         URLConnection urlConnection = url.openConnection();
         urlConnection.connect();
         String tmp = urlConnection.getHeaderField("Set-Cookie");
@@ -74,7 +74,7 @@ public class WaterAndElectricity
 
         preLogin();
 
-        URL url = new URL(HOST+LOGIN_SUFFIX);
+        URL url = new URL(HOST + LOGIN_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setRequestMethod("POST");
         httpURLConnection.setInstanceFollowRedirects(false);
@@ -156,13 +156,13 @@ public class WaterAndElectricity
 
         for (Element td : elements) {
             String tmp = td.text();
-            if(!"".equals(tmp)) {
+            if (!"".equals(tmp)) {
                 stringArrayList.add(tmp);
             }
         }
 
-        for (int i = 0; i < stringArrayList.size(); i ++) {
-            if(stringArrayList.get(i).contains("￥")) {
+        for (int i = 0; i < stringArrayList.size(); i++) {
+            if (stringArrayList.get(i).contains("￥")) {
                 stringArrayList.set(i, stringArrayList.get(i).substring(stringArrayList.get(i).indexOf("：") + 2));
                 continue;
             }
@@ -200,7 +200,7 @@ public class WaterAndElectricity
         OUTPUT_DATA += "&HiddenField_UserID=";
         OUTPUT_DATA += ID;
 
-        Document document = getPage(OUTPUT_DATA,USEINFO_SUFFIX);
+        Document document = getPage(OUTPUT_DATA, USEINFO_SUFFIX);
         Elements elements = document.select("td");
 
         List<String> stringArrayList = new ArrayList<>();
@@ -208,7 +208,7 @@ public class WaterAndElectricity
         for (Element td : elements) {
             String tmp = td.text();
             tmp = tmp.replaceAll(" ", "");
-            if(!"".equals(tmp)) {
+            if (!"".equals(tmp)) {
                 if (tmp.contains("减免量")) {
                     stringArrayList.add(tmp.substring(0, tmp.indexOf("减免量")));
                     stringArrayList.add(tmp.substring(tmp.indexOf("减免量")));
@@ -218,7 +218,7 @@ public class WaterAndElectricity
             }
         }
 
-        for (int i = 0; i < stringArrayList.size(); i ++) {
+        for (int i = 0; i < stringArrayList.size(); i++) {
             stringArrayList.set(i, stringArrayList.get(i).substring(stringArrayList.get(i).indexOf("：") + 1));
         }
 
@@ -241,12 +241,12 @@ public class WaterAndElectricity
 
         for (Element td : elements) {
             String tmp = td.text();
-            if(!"".equals(tmp)) {
+            if (!"".equals(tmp)) {
                 stringArrayList.add(tmp);
             }
         }
 
-        for (int i = 0; i < stringArrayList.size(); i ++) {
+        for (int i = 0; i < stringArrayList.size(); i++) {
             stringArrayList.set(i, stringArrayList.get(i).substring(stringArrayList.get(i).indexOf("：") + 1));
         }
 
@@ -278,7 +278,7 @@ public class WaterAndElectricity
         httpURLConnection.setRequestProperty("Cookie", "ASP.NET_SessionId=" + ASP_dot_NET_SessionId);
 
         httpURLConnection.connect();
-        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(httpURLConnection.getOutputStream(),"UTF-8");
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(httpURLConnection.getOutputStream(), "UTF-8");
         outputStreamWriter.write(output_data);
         outputStreamWriter.flush();
         outputStreamWriter.close();
@@ -307,8 +307,7 @@ public class WaterAndElectricity
         if (document.toString().contains(username)) {
             ID = username;
             return true;
-        }
-        else {
+        } else {
             ID = "";
             return false;
         }
@@ -316,7 +315,7 @@ public class WaterAndElectricity
 
     /**
      * 用于返回当前会话的卡号(学号)
-     *
+     * <p>
      * 注意: 当且仅当checkIsLogin()方法被调用且确认已登录成功(checkIsLogin()返回true)时, 其返回为当前会话的卡号(学号), 否则返回空内容
      */
     public String getID() {

@@ -25,5 +25,6 @@ import java.io.IOException;
 
 public interface IXDUBase {
     boolean checkIsLogin(@NotNull String username) throws IOException;
+
     String getID();
 }

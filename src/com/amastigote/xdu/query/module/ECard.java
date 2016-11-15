@@ -29,6 +29,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import com.amastigote.xdu.query.util.IXDUBase;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -38,10 +39,10 @@ import java.util.List;
 
 public class ECard
         implements
-            IXDUBase,
-            IXDUCaptcha,
-            IXDUQueryDateDurationParam,
-            IXDULoginCaptcha {
+        IXDUBase,
+        IXDUCaptcha,
+        IXDUQueryDateDurationParam,
+        IXDULoginCaptcha {
 
     private final static String HOST = "http://ecard.xidian.edu.cn";
     private final static String PRE_LOGIN_SUFFIX = "/login.jsp";
@@ -79,7 +80,7 @@ public class ECard
         byte[] bytes = new byte[1024];
         FileOutputStream fileOutputStream = new FileOutputStream(file);
         int LENGTH;
-        while ((LENGTH = inputStream.read(bytes)) != -1){
+        while ((LENGTH = inputStream.read(bytes)) != -1) {
             fileOutputStream.write(bytes, 0, LENGTH);
         }
         inputStream.close();
@@ -129,7 +130,7 @@ public class ECard
             bufferedReader.close();
             return false;
         }
-        while ((BUFFER = bufferedReader.readLine()) != null){
+        while ((BUFFER = bufferedReader.readLine()) != null) {
             if (BUFFER.contains(username.substring(0, 7))) {
                 ID = username;
                 bufferedReader.close();
@@ -159,7 +160,7 @@ public class ECard
         /*
          * 遍历所有结果页面
          */
-        for (int page = 1; page <= maxPage; page ++) {
+        for (int page = 1; page <= maxPage; page++) {
             httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setRequestMethod("POST");
             httpURLConnection.setDoOutput(true);
@@ -189,7 +190,7 @@ public class ECard
             outputStreamWriter.flush();
             outputStreamWriter.close();
             BufferedReader bufferedReader = new BufferedReader(
-                                            new InputStreamReader(httpURLConnection.getInputStream(), "UTF-8"));
+                    new InputStreamReader(httpURLConnection.getInputStream(), "UTF-8"));
             String temp;
             String htmlPage = "";
             while ((temp = bufferedReader.readLine()) != null)
@@ -234,8 +235,8 @@ public class ECard
             return null;
         stringArrayList.set(stringArrayList.size() - 1,
                 stringArrayList.get(stringArrayList.size() - 1)
-                .substring(stringArrayList.get(stringArrayList.size() - 1).indexOf("：") + 1,
-                        stringArrayList.get(stringArrayList.size() - 1).indexOf(" ")));
+                        .substring(stringArrayList.get(stringArrayList.size() - 1).indexOf("：") + 1,
+                                stringArrayList.get(stringArrayList.size() - 1).indexOf(" ")));
 
         /*
          * 返回字符串数组(stringArrayList)说明:
@@ -252,10 +253,10 @@ public class ECard
 
     /**
      * 用于返回当前会话的卡号(学号)
-     *
+     * <p>
      * 注意: 当且仅当checkIsLogin()方法被调用且确认已登录成功(checkIsLogin()返回true)时, 其返回为当前会话的卡号(学号), 否则返回空内容
      */
-    public String getID(){
+    public String getID() {
         return ID;
     }
 }
