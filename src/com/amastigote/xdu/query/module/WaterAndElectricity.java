@@ -51,7 +51,8 @@ public class WaterAndElectricity
     private final static String USEINFO_SUFFIX = "/SearchWap/webFrm/useInfo.aspx";
     private final static String PAYINFO_SUFFIX = "/SearchWap/webFrm/pay.aspx";
     private final static String METINFO_SUFFIX = "/SearchWap/webFrm/met.aspx";
-
+    private static final String ONE_MONTH = "近一个月";
+    private static final String THREE_MONTH = "近三个月";
     private static String VIEWSTATE = "";
     private String ID = "";
     private String ASP_dot_NET_SessionId = "";
@@ -66,7 +67,6 @@ public class WaterAndElectricity
                 tmp.indexOf("=") + 1,
                 tmp.indexOf(";"));
     }
-
 
     public boolean login(@NotNull String username, @NotNull String password) throws IOException {
 
@@ -124,9 +124,6 @@ public class WaterAndElectricity
 
         return stringArrayList;
     }
-
-    private static final String ONE_MONTH = "近一个月";
-    private static final String THREE_MONTH = "近三个月";
 
     private List<String> query_payInfo(Duration duration) throws IOException {
         getPageAttributes(PAYINFO_SUFFIX);

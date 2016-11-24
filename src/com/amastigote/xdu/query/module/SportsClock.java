@@ -19,6 +19,7 @@
 
 package com.amastigote.xdu.query.module;
 
+import com.amastigote.xdu.query.util.IXDUBase;
 import com.amastigote.xdu.query.util.IXDULoginNormal;
 import com.amastigote.xdu.query.util.IXDUQueryNoParam;
 import com.sun.istack.internal.NotNull;
@@ -26,7 +27,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import com.amastigote.xdu.query.util.IXDUBase;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -111,23 +111,27 @@ public class SportsClock
         bufferedReader.close();
 
         Document document = Jsoup.parse(htmlPage);
-        Elements elements = document.select("tr[class=\"\"]");
-        Elements tds = elements.select("td");
+        Element element = document.select("tbody").first();
+        Elements trs = element.select("tr");
 
         /*
          * 返回字符串数组(stringArrayList)说明:
-         *      - 从数组第0项开始, 每五项是一条完整的打卡记录
-         *      - 此五项依次代表 [ 列表编号 | 打卡日期 | 打卡时段 | 里程 | 平均速度 ]
-         *      - 因此, 数组长度为(5n), n即代表打卡记录的总条数
+         *      - 从数组第0项开始, 每六项是一条完整的打卡记录
+         *      - 此六项依次代表 [ 列表编号 | 打卡日期 | 打卡时段 | 里程 | 平均速度 | 无效理由(若为""则该条记录有效) ]
+         *      - 因此, 数组长度为(6n), n即代表打卡记录的总条数
          *      - 打卡记录的顺序按打卡日期从早到晚排列
          *
          *      - 注意: 如果结果中没有记录将返回空数组而非null!
          */
         List<String> stringArrayList = new ArrayList<>();
 
-        for (Element td : tds) {
-            if (!"".equals(td.text()))
-                stringArrayList.add(td.text());
+        for (Element tr : trs) {
+            stringArrayList.add(tr.child(0).text());
+            stringArrayList.add(tr.child(1).text());
+            stringArrayList.add(tr.child(2).text());
+            stringArrayList.add(tr.child(3).text());
+            stringArrayList.add(tr.child(4).text());
+            stringArrayList.add(tr.child(6).text());
         }
         return stringArrayList;
     }

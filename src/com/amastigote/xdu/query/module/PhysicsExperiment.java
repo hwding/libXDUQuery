@@ -19,6 +19,7 @@
 
 package com.amastigote.xdu.query.module;
 
+import com.amastigote.xdu.query.util.IXDUBase;
 import com.amastigote.xdu.query.util.IXDULoginNormal;
 import com.amastigote.xdu.query.util.IXDUQueryNoParam;
 import com.sun.istack.internal.NotNull;
@@ -26,10 +27,12 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import com.amastigote.xdu.query.util.IXDUBase;
 
 import java.io.*;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 

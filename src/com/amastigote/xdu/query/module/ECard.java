@@ -19,6 +19,7 @@
 
 package com.amastigote.xdu.query.module;
 
+import com.amastigote.xdu.query.util.IXDUBase;
 import com.amastigote.xdu.query.util.IXDUCaptcha;
 import com.amastigote.xdu.query.util.IXDULoginCaptcha;
 import com.amastigote.xdu.query.util.IXDUQueryDateDurationParam;
@@ -28,7 +29,6 @@ import org.jsoup.helper.StringUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import com.amastigote.xdu.query.util.IXDUBase;
 
 import java.io.*;
 import java.net.HttpURLConnection;
