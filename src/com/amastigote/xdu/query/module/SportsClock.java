@@ -39,7 +39,8 @@ public class SportsClock
         implements
         IXDUBase,
         IXDUQueryNoParam,
-        IXDULoginNormal {
+        IXDULoginNormal,
+        Serializable {
     private final static String HOST = "http://210.27.8.14";
     private final static String LOGIN_SUFFIX = "/login";
     private final static String RUNNER_SUFFIX = "/runner/";

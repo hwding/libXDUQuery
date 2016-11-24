@@ -28,10 +28,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import com.amastigote.xdu.query.util.IXDUBase;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +37,8 @@ public class PhysicsExperiment
         implements
         IXDUBase,
         IXDUQueryNoParam,
-        IXDULoginNormal {
+        IXDULoginNormal,
+        Serializable {
     private final static String HOST = "http://wlsy.xidian.edu.cn/phyEws";
     private final static String SELECTED_EXPERIMENT_SUFFIX = "/student/select.aspx";
     private final static String STUDENT_SUFFIX = "/student/student.aspx";

@@ -32,10 +32,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -46,7 +43,8 @@ public class WaterAndElectricity
         implements
         IXDUBase,
         IXDUQueryTypeAndDurationParam,
-        IXDULoginNormal {
+        IXDULoginNormal,
+        Serializable {
     private final static String HOST = "http://10.168.55.50:8088";
     private final static String PRE_LOGIN_SUFFIX = "/searchWap/Login.aspx";
     private final static String LOGIN_SUFFIX = "/ajaxpro/SearchWap_Login,App_Web_fghipt60.ashx";

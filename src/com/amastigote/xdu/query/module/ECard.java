@@ -42,7 +42,8 @@ public class ECard
         IXDUBase,
         IXDUCaptcha,
         IXDUQueryDateDurationParam,
-        IXDULoginCaptcha {
+        IXDULoginCaptcha,
+        Serializable {
 
     private final static String HOST = "http://ecard.xidian.edu.cn";
     private final static String PRE_LOGIN_SUFFIX = "/login.jsp";
