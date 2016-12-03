@@ -19,7 +19,7 @@
 
 ### 📜 接口文档
 - API documentation is temporarily unavailable
-- You can read [Test.java](https://github.com/hwding/libXDUQuery/blob/master/src/com/amastigote/xdu/query/test/Test.java) along with comments in [source codes](https://github.com/hwding/libXDUQuery/tree/master/src/com/amastigote/xdu/query/module) for a quick understanding
+- You can read [Test.java](https://github.com/hwding/libXDUQuery/blob/master/src/test/Test.java) along with those comments in the [source codes](https://github.com/hwding/libXDUQuery/tree/master/src/com/amastigote/xdu/query/module) for a quick understanding
 
 ### 😍 特性
 - 为每个账户对象实现了Serializable接口, 对象反序列化后如果登录状态检测依旧有效(`checkIsLogin("username")` -> `true`), 则可直接调用查询方法
