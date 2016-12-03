@@ -25,8 +25,7 @@ import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 
 import java.io.IOException;
-import java.util.List;
 
 public interface IXDUQueryTypeAndDurationParam {
-    List<String> query(@NotNull Type type, @Nullable Duration duration) throws IOException;
+    Object query(@NotNull Type type, @Nullable Duration duration) throws IOException;
 }

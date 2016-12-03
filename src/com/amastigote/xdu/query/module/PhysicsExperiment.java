@@ -81,7 +81,6 @@ public class PhysicsExperiment
 
     /**
      * 登录方法须传入 [ 学号 | 密码 ] 作为参数
-     * 返回是否登录成功
      *
      * @return 是否登录成功
      */

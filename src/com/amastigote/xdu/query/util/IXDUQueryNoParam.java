@@ -20,8 +20,7 @@
 package com.amastigote.xdu.query.util;
 
 import java.io.IOException;
-import java.util.List;
 
 public interface IXDUQueryNoParam {
-    List<String> query() throws IOException;
+    Object query() throws IOException;
 }

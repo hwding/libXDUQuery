@@ -17,14 +17,12 @@
             E-mail: m@amastigote.com
 */
 
-package com.amastigote.xdu.query.test;
+package test;
 
 import com.amastigote.xdu.query.conf.Duration;
 import com.amastigote.xdu.query.conf.Type;
-import com.amastigote.xdu.query.module.ECard;
-import com.amastigote.xdu.query.module.PhysicsExperiment;
-import com.amastigote.xdu.query.module.SportsClock;
-import com.amastigote.xdu.query.module.WaterAndElectricity;
+import com.amastigote.xdu.query.module.*;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,9 +72,18 @@ public class Test {
                 System.out.println(stringArrayList_e.size());
                 System.out.println(stringArrayList_e);
             }
+
+            EduSystem eduSystem = new EduSystem();
+            if (eduSystem.login("15130188016", "deleted_e")) {
+                JSONObject jsonObject_course = eduSystem.query(EduSystem.QueryType.COURSE);
+                JSONObject jsonObject_student = eduSystem.query(EduSystem.QueryType.STUDENT);
+                JSONObject jsonObject_grades = eduSystem.query(EduSystem.QueryType.GRADES);
+                System.out.println(jsonObject_course.toString());
+                System.out.println(jsonObject_student.toString());
+                System.out.println(jsonObject_grades.toString());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }

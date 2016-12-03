@@ -68,7 +68,7 @@ public class ECard
     }
 
     /*
-     * 加载验证码须传入 [ 目标文件 ] 作为参数
+     * 加载验证码须传入 [ 目标文件(File对象) ] 作为参数
      * 验证码将会写入目标文件, 文件须为JPEG格式
      * 登录(或重新登录)前必须调用此方法以刷新此次SESSION(会话)的验证码
      */
@@ -88,9 +88,10 @@ public class ECard
         fileOutputStream.close();
     }
 
-    /*
+    /**
      * 登录方法须传入 [ 当前验证码 | 学号(卡号) | 一卡通密码 ] 作为参数
-     * 返回是否登录成功
+     *
+     * @return 是否登录成功
      */
     public boolean login(@NotNull String username, @NotNull String password, @NotNull String captcha) throws IOException {
 
@@ -254,7 +255,7 @@ public class ECard
 
     /**
      * 用于返回当前会话的卡号(学号)
-     * <p>
+     *
      * 注意: 当且仅当checkIsLogin()方法被调用且确认已登录成功(checkIsLogin()返回true)时, 其返回为当前会话的卡号(学号), 否则返回空内容
      */
     public String getID() {
