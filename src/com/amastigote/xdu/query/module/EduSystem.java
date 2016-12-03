@@ -17,7 +17,6 @@
             E-mail: m@amastigote.com
 */
 
-
 package com.amastigote.xdu.query.module;
 
 import com.amastigote.xdu.query.util.IXDUBase;
@@ -31,10 +30,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -45,22 +41,23 @@ public class EduSystem
         implements
         IXDULoginNormal,
         IXDUBase,
-        IXDUQueryEduSysType {
+        IXDUQueryEduSysType,
+        Serializable {
     private final static String SYS_HOST = "http://jwxt.xidian.edu.cn/";
     private final static String LOGIN_HOST = "http://ids.xidian.edu.cn/";
     private final static String LOGIN_SUFFIX = "authserver/login?service=http://jwxt.xidian.edu.cn/caslogin.jsp";
     private final static String SYS_SUFFIX = "caslogin.jsp";
 
-    private String LOGIN_PARAM_lt;
-    private String LOGIN_PARAM_execution;
-    private String LOGIN_PARAM__eventId;
-    private String LOGIN_PARAM_rmShown;
+    private String LOGIN_PARAM_lt = "";
+    private String LOGIN_PARAM_execution = "";
+    private String LOGIN_PARAM__eventId = "";
+    private String LOGIN_PARAM_rmShown = "";
 
-    private String LOGIN_JSESSIONID;
-    private String BIGipServeridsnew;
-    private String route;
+    private String LOGIN_JSESSIONID = "";
+    private String BIGIP_SERVER_IDS_NEW = "";
+    private String ROUTE = "";
 
-    private String SYS_JSESSIONID;
+    private String SYS_JSESSIONID = "";
 
     private String ID = "";
 
@@ -81,12 +78,12 @@ public class EduSystem
 
         List<String> cookies_to_set = httpURLConnection.getHeaderFields().get("Set-Cookie");
         for (String e : cookies_to_set) {
-            if (e.contains("route="))
-                route = e.substring(6);
+            if (e.contains("ROUTE="))
+                ROUTE = e.substring(6);
             else if (e.contains("JSESSIONID="))
                 LOGIN_JSESSIONID = e.substring(11, e.indexOf(";"));
-            else if (e.contains("BIGipServeridsnew.xidian.edu.cn="))
-                BIGipServeridsnew = e.substring(32, e.indexOf(";"));
+            else if (e.contains("BIGIP_SERVER_IDS_NEW.xidian.edu.cn="))
+                BIGIP_SERVER_IDS_NEW = e.substring(32, e.indexOf(";"));
         }
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
@@ -161,7 +158,7 @@ public class EduSystem
         OUTPUT_DATA += "&_eventId=" + LOGIN_PARAM__eventId;
         OUTPUT_DATA += "&rmShown=" + LOGIN_PARAM_rmShown;
 
-        httpURLConnection_a.setRequestProperty("Cookie", "route=" + route + "; org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE=zh_CN; JSESSIONID=" + LOGIN_JSESSIONID + "; BIGipServeridsnew.xidian.edu.cn=" + BIGipServeridsnew + ";");
+        httpURLConnection_a.setRequestProperty("Cookie", "ROUTE=" + ROUTE + "; org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE=zh_CN; JSESSIONID=" + LOGIN_JSESSIONID + "; BIGIP_SERVER_IDS_NEW.xidian.edu.cn=" + BIGIP_SERVER_IDS_NEW + ";");
 
         httpURLConnection_a.connect();
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(httpURLConnection_a.getOutputStream(), "UTF-8");
