@@ -7,6 +7,7 @@
 - Add the JAR file to your project
 
 ### 😀 已支持
+- **教务系统 -> EduSystem**
 - **校一卡通 -> ECard**
 - **体育打卡 -> SportsClock**
 - **物理实验 -> PhysicsExperiment**
