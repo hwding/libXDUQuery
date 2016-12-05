@@ -2,8 +2,8 @@
 西电查询服务接口
 
 ### 🏆 获取与使用
-- Download ZIP
-- The latest-compiled JAR file is in [`dist/libXDUQuery_jar`](https://github.com/hwding/libXDUQuery/tree/master/dist/libXDUQuery_jar)
+- Download the ZIP file of this repository or `git clone https://github.com/hwding/libXDUQuery.git`  
+- The latest-compiled JAR file is in [./dist/libXDUQuery_jar/](https://github.com/hwding/libXDUQuery/tree/master/dist/libXDUQuery_jar)
 - Add the JAR file to your project
 
 ### 😀 已支持
