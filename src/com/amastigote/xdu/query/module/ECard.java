@@ -51,6 +51,7 @@ public class ECard
     private final static String LOGIN_SUFFIX = "/cardUserManager.do?method=checkLogin";
     private final static String CAPTCHA_SUFFIX = "/authImage";
     private final static String TRANSFER_INFO_SUFFIX = "/cardUserManager.do?method=searchTrjnInfos";
+    private static final long serialVersionUID = 2785605635734036885L;
 
     private String JSESSIONID = "";
     private String ID = "";
@@ -72,6 +73,7 @@ public class ECard
      * 验证码将会写入目标文件, 文件须为JPEG格式
      * 登录(或重新登录)前必须调用此方法以刷新此次SESSION(会话)的验证码
      */
+    @Override
     public void getCaptcha(@NotNull File file) throws IOException {
         URL url = new URL(HOST + CAPTCHA_SUFFIX);
         URLConnection urlConnection = url.openConnection();
@@ -93,6 +95,7 @@ public class ECard
      *
      * @return 是否登录成功
      */
+    @Override
     public boolean login(@NotNull String username, @NotNull String password, @NotNull String captcha) throws IOException {
 
         URL url = new URL(HOST + LOGIN_SUFFIX);
@@ -121,6 +124,7 @@ public class ECard
      * 可用于检测当前SESSION(会话)是否因为已超时而需要重新登录
      * 传入参数为登录时的学号(卡号)
      */
+    @Override
     public boolean checkIsLogin(@NotNull String username) throws IOException {
         URL url = new URL(HOST + CARD_USER_INFO_SUFFIX);
         URLConnection urlConnection = url.openConnection();
@@ -150,6 +154,7 @@ public class ECard
      *
      * 注意: 起止日期区间不得超过一个月, 否则将返回垃圾结果
      */
+    @Override
     public List<String> query(@NotNull String fromDate, @NotNull String toDate) throws IOException {
 
         int maxPage = 1;
@@ -255,9 +260,10 @@ public class ECard
 
     /**
      * 用于返回当前会话的卡号(学号)
-     *
+     * <p>
      * 注意: 当且仅当checkIsLogin()方法被调用且确认已登录成功(checkIsLogin()返回true)时, 其返回为当前会话的卡号(学号), 否则返回空内容
      */
+    @Override
     public String getID() {
         return ID;
     }

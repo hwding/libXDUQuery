@@ -19,11 +19,11 @@
 
 package com.amastigote.xdu.query.util;
 
-import com.amastigote.xdu.query.module.EduSystem;
+import com.amastigote.xdu.query.conf.QueryType;
 import com.sun.istack.internal.NotNull;
 
 import java.io.IOException;
 
 public interface IXDUQueryEduSysType {
-    Object query(@NotNull EduSystem.QueryType p0) throws IOException;
+    Object query(@NotNull QueryType p0) throws IOException;
 }

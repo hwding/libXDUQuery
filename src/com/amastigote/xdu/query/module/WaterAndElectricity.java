@@ -53,6 +53,7 @@ public class WaterAndElectricity
     private final static String METINFO_SUFFIX = "/SearchWap/webFrm/met.aspx";
     private static final String ONE_MONTH = "近一个月";
     private static final String THREE_MONTH = "近三个月";
+    private static final long serialVersionUID = -5105094843350319282L;
     private static String VIEWSTATE = "";
     private String ID = "";
     private String ASP_dot_NET_SessionId = "";
@@ -68,8 +69,8 @@ public class WaterAndElectricity
                 tmp.indexOf(";"));
     }
 
+    @Override
     public boolean login(@NotNull String username, @NotNull String password) throws IOException {
-
         preLogin();
 
         URL url = new URL(HOST + LOGIN_SUFFIX);
@@ -100,6 +101,7 @@ public class WaterAndElectricity
      *
      * 注意: 此处传入的参数请使用枚举类型 Type 与 Duration
      */
+    @Override
     public List<String> query(@NotNull Type type, @Nullable Duration duration) throws IOException {
         List<String> stringArrayList;
         switch (type) {
@@ -297,6 +299,7 @@ public class WaterAndElectricity
      * 可用于检测当前SESSION(会话)是否因为已超时而需要重新登录
      * 传入参数为登录时的学号(卡号)
      */
+    @Override
     public boolean checkIsLogin(@NotNull String username) throws IOException {
         Document document = getPage("", USEINFO_SUFFIX);
         if (document.toString().contains(username)) {
@@ -313,6 +316,7 @@ public class WaterAndElectricity
      * <p>
      * 注意: 当且仅当checkIsLogin()方法被调用且确认已登录成功(checkIsLogin()返回true)时, 其返回为当前会话的卡号(学号), 否则返回空内容
      */
+    @Override
     public String getID() {
         return ID;
     }

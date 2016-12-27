@@ -19,6 +19,7 @@
 
 package com.amastigote.xdu.query.module;
 
+import com.amastigote.xdu.query.conf.QueryType;
 import com.amastigote.xdu.query.util.IXDUBase;
 import com.amastigote.xdu.query.util.IXDULoginNormal;
 import com.amastigote.xdu.query.util.IXDUQueryEduSysType;
@@ -47,6 +48,7 @@ public class EduSystem
     private final static String LOGIN_HOST = "http://ids.xidian.edu.cn/";
     private final static String LOGIN_SUFFIX = "authserver/login?service=http://jwxt.xidian.edu.cn/caslogin.jsp";
     private final static String SYS_SUFFIX = "caslogin.jsp";
+    private static final long serialVersionUID = -5116999038665499130L;
 
     private String LOGIN_PARAM_lt = "";
     private String LOGIN_PARAM_execution = "";
@@ -193,6 +195,7 @@ public class EduSystem
         return checkIsLogin(username);
     }
 
+    @Override
     public JSONObject query(QueryType type) throws IOException, JSONException {
         switch (type) {
             case COURSE:
@@ -375,13 +378,6 @@ public class EduSystem
             arrayList.add(JGradeObject);
         }
         return arrayList;
-    }
-
-    //查询大类的Types
-    public enum QueryType {
-        COURSE,
-        STUDENT,
-        GRADES
     }
 
     //成绩信息的Keys

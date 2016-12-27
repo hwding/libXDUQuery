@@ -20,12 +20,12 @@
 package test;
 
 import com.amastigote.xdu.query.conf.Duration;
+import com.amastigote.xdu.query.conf.QueryType;
 import com.amastigote.xdu.query.conf.Type;
 import com.amastigote.xdu.query.module.*;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.Scanner;
 
@@ -75,13 +75,35 @@ public class Test {
 
             EduSystem eduSystem = new EduSystem();
             if (eduSystem.login("15130188016", "deleted_e")) {
-                JSONObject jsonObject_course = eduSystem.query(EduSystem.QueryType.COURSE);
-                JSONObject jsonObject_student = eduSystem.query(EduSystem.QueryType.STUDENT);
-                JSONObject jsonObject_grades = eduSystem.query(EduSystem.QueryType.GRADES);
+                JSONObject jsonObject_course = eduSystem.query(QueryType.COURSE);
+                JSONObject jsonObject_student = eduSystem.query(QueryType.STUDENT);
+                JSONObject jsonObject_grades = eduSystem.query(QueryType.GRADES);
                 System.out.println(jsonObject_course.toString());
                 System.out.println(jsonObject_student.toString());
                 System.out.println(jsonObject_grades.toString());
+
+                new ObjectOutputStream(new FileOutputStream("myEduAccount.xduq")).writeObject(eduSystem);
             }
+
+            File file1 = new File("myEduAccount.xduq");
+            if (file1.exists()) {
+                try {
+                    EduSystem eduSystem1 = (EduSystem) new ObjectInputStream(new FileInputStream(file1)).readObject();
+                    if (eduSystem1.checkIsLogin(eduSystem1.getID())) {
+                        System.out.println("Account session still valid.");
+                        System.out.println(eduSystem1.getID());
+                        JSONObject jsonObject_course = eduSystem1.query(QueryType.COURSE);
+                        JSONObject jsonObject_student = eduSystem1.query(QueryType.STUDENT);
+                        JSONObject jsonObject_grades = eduSystem1.query(QueryType.GRADES);
+                        System.out.println(jsonObject_course.toString());
+                        System.out.println(jsonObject_student.toString());
+                        System.out.println(jsonObject_grades.toString());
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

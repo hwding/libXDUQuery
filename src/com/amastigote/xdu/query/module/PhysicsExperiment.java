@@ -46,6 +46,7 @@ public class PhysicsExperiment
     private final static String SELECTED_EXPERIMENT_SUFFIX = "/student/select.aspx";
     private final static String STUDENT_SUFFIX = "/student/student.aspx";
     private final static String LOGIN_SUFFIX = "/default.aspx";
+    private static final long serialVersionUID = -7558548396603468234L;
 
     private String PhyEwsAuth = "";
     private String ID = "";
@@ -84,6 +85,7 @@ public class PhysicsExperiment
      *
      * @return 是否登录成功
      */
+    @Override
     public boolean login(@NotNull String username, @NotNull String password) throws IOException {
 
         List<String> pageAttributes = getPageAttributes(preLogin());
@@ -125,6 +127,7 @@ public class PhysicsExperiment
      * 可用于检测当前SESSION(会话)是否因为已超时而需要重新登录
      * 传入参数为登录时的学号(卡号)
      */
+    @Override
     public boolean checkIsLogin(@NotNull String username) throws IOException {
         Document document = getPage(STUDENT_SUFFIX);
         Elements elements = document.select("span[id=\"Stu\"]");
@@ -152,6 +155,7 @@ public class PhysicsExperiment
         return Jsoup.parse(htmlPage);
     }
 
+    @Override
     public List<String> query() throws IOException {
         Document document = getPage(SELECTED_EXPERIMENT_SUFFIX);
         List<String> stringArrayList = new ArrayList<>();
@@ -174,6 +178,7 @@ public class PhysicsExperiment
      *
      * 注意: 当且仅当登录成功时, 其返回为当前会话的学号, 否则返回空内容
      */
+    @Override
     public String getID() {
         return ID;
     }

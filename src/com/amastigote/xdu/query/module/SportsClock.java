@@ -45,6 +45,7 @@ public class SportsClock
     private final static String LOGIN_SUFFIX = "/login";
     private final static String RUNNER_SUFFIX = "/runner/";
     private final static String ACHIEVEMENTS_SUFFIX = "/runner/achievements.html";
+    private static final long serialVersionUID = -4196495966097077372L;
 
     private String JSESSIONID = "";
     private String ID = "";
@@ -53,8 +54,8 @@ public class SportsClock
      * 登录方法须传入 [ 学号 | 密码 ] 作为参数
      * 返回是否登录成功
      */
+    @Override
     public boolean login(@NotNull String username, @NotNull String password) throws IOException {
-
         URL url = new URL(HOST + LOGIN_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setDoOutput(true);
@@ -82,6 +83,7 @@ public class SportsClock
      * 可用于检测当前SESSION(会话)是否因为已超时而需要重新登录
      * 传入参数为登录时的学号(卡号)
      */
+    @Override
     public boolean checkIsLogin(@NotNull String username) throws IOException {
         URL url = new URL(HOST + RUNNER_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -99,6 +101,7 @@ public class SportsClock
         return false;
     }
 
+    @Override
     public List<String> query() throws IOException {
         URL url = new URL(HOST + ACHIEVEMENTS_SUFFIX);
         URLConnection urlConnection = url.openConnection();
@@ -141,6 +144,7 @@ public class SportsClock
      *
      * 注意: 当且仅当checkIsLogin()方法被调用且确认已登录成功(checkIsLogin()返回true)时, 其返回为当前会话的学号, 否则返回空内容
      */
+    @Override
     public String getID() {
         return ID;
     }
