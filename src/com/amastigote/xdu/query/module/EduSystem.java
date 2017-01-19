@@ -80,11 +80,11 @@ public class EduSystem
 
         List<String> cookies_to_set = httpURLConnection.getHeaderFields().get("Set-Cookie");
         for (String e : cookies_to_set) {
-            if (e.contains("ROUTE="))
+            if (e.contains("route="))
                 ROUTE = e.substring(6);
             else if (e.contains("JSESSIONID="))
                 LOGIN_JSESSIONID = e.substring(11, e.indexOf(";"));
-            else if (e.contains("BIGIP_SERVER_IDS_NEW.xidian.edu.cn="))
+            else if (e.contains("BIGipServeridsnew.xidian.edu.cn="))
                 BIGIP_SERVER_IDS_NEW = e.substring(32, e.indexOf(";"));
         }
 
@@ -160,7 +160,7 @@ public class EduSystem
         OUTPUT_DATA += "&_eventId=" + LOGIN_PARAM__eventId;
         OUTPUT_DATA += "&rmShown=" + LOGIN_PARAM_rmShown;
 
-        httpURLConnection_a.setRequestProperty("Cookie", "ROUTE=" + ROUTE + "; org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE=zh_CN; JSESSIONID=" + LOGIN_JSESSIONID + "; BIGIP_SERVER_IDS_NEW.xidian.edu.cn=" + BIGIP_SERVER_IDS_NEW + ";");
+        httpURLConnection_a.setRequestProperty("Cookie", "route=" + ROUTE + "; org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE=zh_CN; JSESSIONID=" + LOGIN_JSESSIONID + "; BIGipServeridsnew.xidian.edu.cn=" + BIGIP_SERVER_IDS_NEW + ";");
 
         httpURLConnection_a.connect();
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(httpURLConnection_a.getOutputStream(), "UTF-8");
