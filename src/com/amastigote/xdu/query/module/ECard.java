@@ -224,7 +224,7 @@ public class ECard
              * 解析当前页面的内容
              */
             Elements tables = document.select("table");
-            Elements trs = tables.select("[id=\"tabInfo\"]");
+            Elements trs = tables.select("[id=tabInfo]");
             Elements tds = trs.select("td");
 
             for (Element td : tds) {

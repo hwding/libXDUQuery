@@ -23,6 +23,7 @@ import com.amastigote.xdu.query.conf.QueryType;
 import com.amastigote.xdu.query.util.IXDUBase;
 import com.amastigote.xdu.query.util.IXDULoginNormal;
 import com.amastigote.xdu.query.util.IXDUQueryEduSysType;
+import com.sun.istack.internal.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +35,6 @@ import org.jsoup.select.Elements;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("FieldCanBeLocal")
@@ -48,6 +48,7 @@ public class EduSystem
     private final static String LOGIN_HOST = "http://ids.xidian.edu.cn/";
     private final static String LOGIN_SUFFIX = "authserver/login?service=http://jwxt.xidian.edu.cn/caslogin.jsp";
     private final static String SYS_SUFFIX = "caslogin.jsp";
+    private final static String GRADE_QUERY_SUFFIX = "gradeLnAllAction.do?oper=qbinfo";
     private static final long serialVersionUID = -5116999038665499130L;
 
     private String LOGIN_PARAM_lt = "";
@@ -97,7 +98,7 @@ public class EduSystem
         }
 
         Document document = Jsoup.parse(html);
-        Elements elements = document.select("input[type=\"hidden\"]");
+        Elements elements = document.select("input[type=hidden]");
 
         for (Element element : elements) {
             switch (element.attr("name")) {
@@ -196,19 +197,23 @@ public class EduSystem
     }
 
     @Override
-    public JSONObject query(QueryType type) throws IOException, JSONException {
+    public
+    @Nullable
+    JSONObject query(QueryType type) throws IOException, JSONException {
         switch (type) {
             case COURSE:
                 return lessonsQuery();
             case STUDENT:
                 return personalInfoQuery();
-            case GRADES:
-                return gradesSemesterQuery();
+            case GRADE:
+                return gradesQuery();
         }
         return null;
     }
 
-    private JSONObject lessonsQuery() throws IOException, JSONException {
+    private
+    @Nullable
+    JSONObject lessonsQuery() throws IOException, JSONException {
         if (!checkIsLogin(ID))
             return null;
 
@@ -219,10 +224,10 @@ public class EduSystem
 
         Document document = Jsoup.parse(httpURLConnection.getInputStream(), "gb2312", httpURLConnection.getURL().toString());
         document = Jsoup.parse(document.toString().replaceAll("&nbsp;", ""));
-        Elements lessons = document.select("table[class=\"titleTop2\"]");
+        Elements lessons = document.select("table[class=titleTop2]");
         Element lessonsElement = lessons.get(1);
 
-        Elements lessonsInfo = lessonsElement.select("tr[onmouseout=\"this.className='even';\"]");
+        Elements lessonsInfo = lessonsElement.select("tr[onmouseout=this.className='even';]");
         int lessons_quantity = lessonsInfo.size();
         JSONArray jsonArray = new JSONArray();
 
@@ -237,24 +242,24 @@ public class EduSystem
             }
 
             JSONObject JLessonObject = new JSONObject();
-            JLessonObject.put(CourseInfoKey.ID, lessonDetails.get(1).text());
-            JLessonObject.put(CourseInfoKey.NAME, lessonDetails.get(2).text());
-            JLessonObject.put(CourseInfoKey.CREDIT, lessonDetails.get(4).text());
-            JLessonObject.put(CourseInfoKey.LENGTH, lessonDetails.get(5).text());
-            JLessonObject.put(CourseInfoKey.ATTR, lessonDetails.get(6).text());
-            JLessonObject.put(CourseInfoKey.EXAM_TYPE, lessonDetails.get(7).text());
-            JLessonObject.put(CourseInfoKey.TEACHER, lessonDetails.get(8).text());
+            JLessonObject.put(CourseKey.ID, lessonDetails.get(1).text());
+            JLessonObject.put(CourseKey.NAME, lessonDetails.get(2).text());
+            JLessonObject.put(CourseKey.CREDIT, lessonDetails.get(4).text());
+            JLessonObject.put(CourseKey.LENGTH, lessonDetails.get(5).text());
+            JLessonObject.put(CourseKey.ATTR, lessonDetails.get(6).text());
+            JLessonObject.put(CourseKey.EXAM_TYPE, lessonDetails.get(7).text());
+            JLessonObject.put(CourseKey.TEACHER, lessonDetails.get(8).text());
 
             JSONArray JLessonTimeAndPosArray = new JSONArray();
             JSONObject JLessonTimeAndPos = new JSONObject();
 
-            JLessonTimeAndPos.put(CourseInfoKey.WEEK, lessonDetails.get(12).text());
-            JLessonTimeAndPos.put(CourseInfoKey.WEEK_DAY, lessonDetails.get(13).text());
-            JLessonTimeAndPos.put(CourseInfoKey.SECTION_TIME, lessonDetails.get(14).text());
-            JLessonTimeAndPos.put(CourseInfoKey.SECTION_LENGTH, lessonDetails.get(15).text());
-            JLessonTimeAndPos.put(CourseInfoKey.CAMPUS, lessonDetails.get(16).text());
-            JLessonTimeAndPos.put(CourseInfoKey.BUILDING, lessonDetails.get(17).text());
-            JLessonTimeAndPos.put(CourseInfoKey.CLASSROOM, lessonDetails.get(18).text());
+            JLessonTimeAndPos.put(CourseKey.WEEK, lessonDetails.get(12).text());
+            JLessonTimeAndPos.put(CourseKey.WEEK_DAY, lessonDetails.get(13).text());
+            JLessonTimeAndPos.put(CourseKey.SECTION_TIME, lessonDetails.get(14).text());
+            JLessonTimeAndPos.put(CourseKey.SECTION_LENGTH, lessonDetails.get(15).text());
+            JLessonTimeAndPos.put(CourseKey.CAMPUS, lessonDetails.get(16).text());
+            JLessonTimeAndPos.put(CourseKey.BUILDING, lessonDetails.get(17).text());
+            JLessonTimeAndPos.put(CourseKey.CLASSROOM, lessonDetails.get(18).text());
 
             JLessonTimeAndPosArray.put(JLessonTimeAndPos);
 
@@ -270,30 +275,32 @@ public class EduSystem
                 row_span = Integer.parseInt(lessonInfo.select("td").get(0).attr("rowspan"));
             }
 
-            //当rowspan小于等于1时，以下代码不会执行
+            //当row_span小于等于1时，以下代码不会执行
             for (int j = 0; j < row_span - 1; j++, i++) {
                 Elements EExtraTimeAndPos = lessonsInfo.get(i).select("td");
                 JSONObject JExtraLessonTimeAndPos = new JSONObject();
 
-                JExtraLessonTimeAndPos.put(CourseInfoKey.WEEK, EExtraTimeAndPos.get(0).text());
-                JExtraLessonTimeAndPos.put(CourseInfoKey.WEEK_DAY, EExtraTimeAndPos.get(1).text());
-                JExtraLessonTimeAndPos.put(CourseInfoKey.SECTION_TIME, EExtraTimeAndPos.get(2).text());
-                JExtraLessonTimeAndPos.put(CourseInfoKey.SECTION_LENGTH, EExtraTimeAndPos.get(3).text());
-                JExtraLessonTimeAndPos.put(CourseInfoKey.CAMPUS, EExtraTimeAndPos.get(4).text());
-                JExtraLessonTimeAndPos.put(CourseInfoKey.BUILDING, EExtraTimeAndPos.get(5).text());
-                JExtraLessonTimeAndPos.put(CourseInfoKey.CLASSROOM, EExtraTimeAndPos.get(6).text());
+                JExtraLessonTimeAndPos.put(CourseKey.WEEK, EExtraTimeAndPos.get(0).text());
+                JExtraLessonTimeAndPos.put(CourseKey.WEEK_DAY, EExtraTimeAndPos.get(1).text());
+                JExtraLessonTimeAndPos.put(CourseKey.SECTION_TIME, EExtraTimeAndPos.get(2).text());
+                JExtraLessonTimeAndPos.put(CourseKey.SECTION_LENGTH, EExtraTimeAndPos.get(3).text());
+                JExtraLessonTimeAndPos.put(CourseKey.CAMPUS, EExtraTimeAndPos.get(4).text());
+                JExtraLessonTimeAndPos.put(CourseKey.BUILDING, EExtraTimeAndPos.get(5).text());
+                JExtraLessonTimeAndPos.put(CourseKey.CLASSROOM, EExtraTimeAndPos.get(6).text());
 
                 JLessonTimeAndPosArray.put(JExtraLessonTimeAndPos);
             }
 
-            JLessonObject.put(CourseInfoKey.TIME_AND_LOCATION_DERAIL, JLessonTimeAndPosArray);
+            JLessonObject.put(CourseKey.TIME_AND_LOCATION_DERAIL, JLessonTimeAndPosArray);
             jsonArray.put(JLessonObject);
         }
 
         return new JSONObject().put("ARRAY", jsonArray);
     }
 
-    private JSONObject personalInfoQuery() throws IOException, JSONException {
+    private
+    @Nullable
+    JSONObject personalInfoQuery() throws IOException, JSONException {
         if (!checkIsLogin(ID)) {
             return null;
         }
@@ -306,52 +313,29 @@ public class EduSystem
         Document document = Jsoup.parse(httpURLConnection.getInputStream(), "gb2312", httpURLConnection.getURL().toString());
         document = Jsoup.parse(document.toString().replaceAll("&nbsp;", ""));
 
-        Elements elements1 = document.select("td[width=\"275\"]");
+        Elements elements1 = document.select("td[width=275]");
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put(PersonalInfoKey.ID, elements1.get(0).text());
-        jsonObject.put(PersonalInfoKey.NAME, elements1.get(1).text());
-        jsonObject.put(PersonalInfoKey.GENDER, elements1.get(6).text());
-        jsonObject.put(PersonalInfoKey.NATION, elements1.get(10).text());
-        jsonObject.put(PersonalInfoKey.NATIVE_PLACE, elements1.get(11).text());
-        jsonObject.put(PersonalInfoKey.DEPARTMENT, elements1.get(24).text());
-        jsonObject.put(PersonalInfoKey.MAJOR, elements1.get(25).text());
-        jsonObject.put(PersonalInfoKey.CLASS, elements1.get(28).text());
+        jsonObject.put(StudentKey.ID, elements1.get(0).text());
+        jsonObject.put(StudentKey.NAME, elements1.get(1).text());
+        jsonObject.put(StudentKey.GENDER, elements1.get(6).text());
+        jsonObject.put(StudentKey.NATION, elements1.get(10).text());
+        jsonObject.put(StudentKey.NATIVE_PLACE, elements1.get(11).text());
+        jsonObject.put(StudentKey.DEPARTMENT, elements1.get(24).text());
+        jsonObject.put(StudentKey.MAJOR, elements1.get(25).text());
+        jsonObject.put(StudentKey.CLASS, elements1.get(28).text());
 
         return jsonObject;
     }
 
-    private JSONObject gradesSemesterQuery() throws IOException, JSONException {
+    private
+    @Nullable
+    JSONObject gradesQuery() throws IOException, JSONException {
         if (!checkIsLogin(ID)) {
             return null;
         }
 
-        URL url = new URL(SYS_HOST + "/gradeLnAllAction.do?type=ln&oper=qb");
-        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-        httpURLConnection.setRequestProperty("Cookie", "JSESSIONID=" + SYS_JSESSIONID);
-        httpURLConnection.connect();
-
-        Document document = Jsoup.parse(httpURLConnection.getInputStream(), "gb2312", httpURLConnection.getURL().toString());
-        document = Jsoup.parse(document.toString().replaceAll("&nbsp;", ""));
-        Elements elements = document.select("a[target=\"lnqbIfra\"]");
-
-        JSONArray durationArray = new JSONArray();
-        JSONArray jsonArray = new JSONArray();
-        for (Element elem : elements) {
-            durationArray.put(elem.text());
-            jsonArray.put(SYS_HOST + elem.attr("href"));
-        }
-
-        return new JSONObject().put("array", jsonArray).put("duration", durationArray);
-
-    }
-
-    private List<JSONObject> gradesQuery(String queryUrl, int index) throws IOException, JSONException {
-        if (!checkIsLogin(ID)) {
-            return null;
-        }
-
-        URL url = new URL(queryUrl);
+        URL url = new URL(SYS_HOST + GRADE_QUERY_SUFFIX);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setRequestProperty("Cookie", "JSESSIONID=" + SYS_JSESSIONID);
         httpURLConnection.connect();
@@ -359,38 +343,41 @@ public class EduSystem
         Document document = Jsoup.parse(httpURLConnection.getInputStream(), "gb2312", httpURLConnection.getURL().toString());
         document = Jsoup.parse(document.toString().replaceAll("&nbsp;", ""));
 
-        Elements semestersGrades = document.select("table[class=\"titleTop2\"]");
+        JSONObject jsonObject = new JSONObject();
+        Elements elements_content = document.select("td[class=pageAlign]");
+        Elements elements_titles = document.select("b");
+        for (int i = 0; i < elements_titles.size(); i++) {
+            JSONObject jsonObject_semester = new JSONObject();
+            String semester_key = elements_titles.get(i).text().trim();
 
-        List<JSONObject> arrayList = new ArrayList<>();
+            Element table_for_this_semester = elements_content.get(i);
+            Elements elements_rows = table_for_this_semester.select("td[align=center]");
 
-        Elements gradesDetails = semestersGrades.get(index - 1).select("tr").select("table[id=\"user\"]").select("tbody").select("tr");
+            for (int j = 0; j < elements_rows.size() / 7; j++) {
+                JSONObject jsonObject_course = new JSONObject();
+                String course_key = elements_rows.get(j * 7 + 2).text().trim();
 
-        for (Element EgradesDetail : gradesDetails) {
-            JSONObject JGradeObject = new JSONObject();
-            Elements items = EgradesDetail.select("td");
-
-            JGradeObject.put(GradesInfoKey.ID, items.get(0).text());
-            JGradeObject.put(GradesInfoKey.NAME, items.get(2).text());
-            JGradeObject.put(GradesInfoKey.CREDIT, items.get(4).text());
-            JGradeObject.put(GradesInfoKey.ATTR, items.get(5).text());
-            JGradeObject.put(GradesInfoKey.GRADES, items.get(6).text());
-
-            arrayList.add(JGradeObject);
+                jsonObject_course.put(GradeKey.ID, elements_rows.get(j * 7).text().trim());
+                jsonObject_course.put(GradeKey.CREDIT, elements_rows.get(j * 7 + 4).text().trim());
+                jsonObject_course.put(GradeKey.ATTR, elements_rows.get(j * 7 + 5).text().trim());
+                jsonObject_course.put(GradeKey.GRADE, elements_rows.get(j * 7 + 6).text().trim());
+                jsonObject_semester.put(course_key, jsonObject_course);
+            }
+            jsonObject.put(semester_key, jsonObject_semester);
         }
-        return arrayList;
+        return jsonObject;
     }
 
     //成绩信息的Keys
-    public static class GradesInfoKey {
+    public static class GradeKey {
         public static final String ID = "ID";           //课程号
-        public static final String NAME = "NAME";       //课程名
         public static final String CREDIT = "CREDIT";   //学分
         public static final String ATTR = "ATTR";       //课程属性
-        public static final String GRADES = "GRADES";   //成绩
+        public static final String GRADE = "GRADE";   //成绩
     }
 
     //课表信息的Keys
-    public static class PersonalInfoKey {
+    public static class StudentKey {
         public static final String ID = "ID";                       //学号
         public static final String NAME = "NAME";                   //姓名
         public static final String GENDER = "GENDER";               //性别
@@ -402,7 +389,7 @@ public class EduSystem
     }
 
     //课表信息的Keys
-    public static class CourseInfoKey {
+    public static class CourseKey {
         public static final String ID = "ID";                           //编号
         public static final String NAME = "NAME";                       //名称
         public static final String CREDIT = "CREDIT";                   //学分

@@ -68,11 +68,11 @@ public class PhysicsExperiment
     private static List<String> getPageAttributes(String htmlPage) {
         Document document = Jsoup.parse(htmlPage);
         Elements elements_VIEWSTATEGENERATOR = document
-                .select("input[type=\"hidden\"][name=\"__VIEWSTATEGENERATOR\"]");
+                .select("input[type=hidden][name=__VIEWSTATEGENERATOR]");
         Elements elements_VIEWSTATE = document
-                .select("input[type=\"hidden\"][name=\"__VIEWSTATE\"]");
+                .select("input[type=hidden][name=__VIEWSTATE]");
         Elements elements_EVENTVALIDATION = document
-                .select("input[type=\"hidden\"][name=\"__EVENTVALIDATION\"]");
+                .select("input[type=hidden][name=__EVENTVALIDATION]");
         List<String> stringArrayList = new ArrayList<>();
         stringArrayList.add(elements_VIEWSTATE.get(0).attr("value"));
         stringArrayList.add(elements_VIEWSTATEGENERATOR.get(0).attr("value"));
@@ -130,7 +130,7 @@ public class PhysicsExperiment
     @Override
     public boolean checkIsLogin(@NotNull String username) throws IOException {
         Document document = getPage(STUDENT_SUFFIX);
-        Elements elements = document.select("span[id=\"Stu\"]");
+        Elements elements = document.select("span[id=Stu]");
 
         if (elements.size() > 0) {
             ID = username;
@@ -159,7 +159,7 @@ public class PhysicsExperiment
     public List<String> query() throws IOException {
         Document document = getPage(SELECTED_EXPERIMENT_SUFFIX);
         List<String> stringArrayList = new ArrayList<>();
-        Elements elements = document.select("td[class=\"forumRow\"]");
+        Elements elements = document.select("td[class=forumRow]");
         for (Element element : elements) stringArrayList.add(element.text());
 
         /*

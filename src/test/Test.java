@@ -77,7 +77,7 @@ public class Test {
             if (eduSystem.login("15130188016", "deleted_e")) {
                 JSONObject jsonObject_course = eduSystem.query(QueryType.COURSE);
                 JSONObject jsonObject_student = eduSystem.query(QueryType.STUDENT);
-                JSONObject jsonObject_grades = eduSystem.query(QueryType.GRADES);
+                JSONObject jsonObject_grades = eduSystem.query(QueryType.GRADE);
                 System.out.println(jsonObject_course.toString());
                 System.out.println(jsonObject_student.toString());
                 System.out.println(jsonObject_grades.toString());
@@ -94,7 +94,7 @@ public class Test {
                         System.out.println(eduSystem1.getID());
                         JSONObject jsonObject_course = eduSystem1.query(QueryType.COURSE);
                         JSONObject jsonObject_student = eduSystem1.query(QueryType.STUDENT);
-                        JSONObject jsonObject_grades = eduSystem1.query(QueryType.GRADES);
+                        JSONObject jsonObject_grades = eduSystem1.query(QueryType.GRADE);
                         System.out.println(jsonObject_course.toString());
                         System.out.println(jsonObject_student.toString());
                         System.out.println(jsonObject_grades.toString());
